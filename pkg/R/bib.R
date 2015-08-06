@@ -141,3 +141,41 @@ fix_journal <- function(x) {
   }
 }
 
+## rcrossref tools, still need improvement
+
+fix_doi <- function(x) {
+  x <- strsplit(x, "/", fixed = TRUE)
+  x <- t(sapply(x, function(y) if(length(y) >= 2L) tail(y, 2L) else c("", "")))
+  ok <- substr(x[, 1L], 1L, 3L) == "10." & apply(nchar(x) >= 1L, 1L, all)
+  x <- apply(x, 1L, paste, collapse = "/")
+  x <- tolower(x)
+  x[!ok] <- ""
+  return(x)  
+}
+
+get_doi <- function(x, minscore = 1.5) {
+  ## set up query string
+  if(inherits(x, "bibentry")) {
+    if(!is.null(x$doi)) return(fix_doi(x$doi))
+    if(!is.null(x$url) && fix_doi(x$url) != "") return(fix_doi(x$url))
+    x$url <- NULL
+    qry <- format(x) ## FIXME better exploit the available information in setting up query?
+  } else {
+    qry <- x
+  }
+  
+  ## query CrossRef through rcrossref
+  y <- as.data.frame(rcrossref::cr_works(query = qry, limit = 1L)$data)
+
+  ## use the result only if score > minscore (1.5 is very ad hoc)
+  if(y$score > minscore) return(y$DOI) else return("")
+}
+
+add_doi <- function(x, file = "out.bib", minscore = 1.5) {
+    y <- bibtex::read.bib(x)
+    dois <- sapply(y, get_doi, minscore = minscore)
+    for(i in 1:length(dois)) 
+        if(nchar(dois[i]) > 0) y[i]$doi <- dois[i]
+          #or:# y[i]$url <- paste("http://dx.doi.org/", dois[i], sep = "")
+    bibtex::write.bib(y, file = file)
+}

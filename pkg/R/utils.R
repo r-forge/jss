@@ -93,12 +93,14 @@ jssbib <- function(file, keytype = c("author", "number"))
   auth <- get_author(x)
   vol <- get_volume(x)
   vol2 <- gsub(" ", "0", format(c(as.numeric(vol), 10)))[-2]
+  vol3 <- gsub(" ", "0", format(c(as.numeric(vol), 100)))[-2]
   num <- get_number(x)
   num2 <- gsub(" ", "0", format(c(as.numeric(num), 10)))[-2]
   year <- get_year(x)
   month <- get_month(x)
-  url <- paste("http://www.jstatsoft.org/v", vol2, "/", stype, num2, "/", sep = "")
-  jsskey <- paste("v", vol2, stype, num2, sep = "")
+  url <- paste0("http://www.jstatsoft.org/v", vol2, "/", stype, num2, "/")
+  doi <- paste0("10.18637/jss.v", vol3, ".", stype, num2)
+  jsskey <- paste("v", vol3, stype, num2, sep = "")
 
   stopifnot(isTRUE(identical(tail(strsplit(file, "/")[[1]], 1),
     as.character(paste(jsskey, ".tex", sep = "")))))
@@ -115,13 +117,14 @@ jssbib <- function(file, keytype = c("author", "number"))
     volume = vol,
     number = num,
     pages = get_pages(file),
-    url = url
+    url = url,
+    doi = doi
   )
   
   return(rval)
 }
 
-tex2BibTeX <- function(file, key_prefix = "", keytype = c("author", "number"))
+tex2BibTeX <- function(file, key_prefix = "", keytype = c("author", "number"), url = FALSE)
 {
   x <- jssbib(file, keytype = keytype)
 
@@ -134,7 +137,8 @@ tex2BibTeX <- function(file, key_prefix = "", keytype = c("author", "number"))
     paste("  volume\t= {", x$volume, "},", sep = ""),
     paste("  number\t= {", x$number, "},", sep = ""),
     paste("  pages\t\t= {1--", x$pages, "},", sep = ""),
-    paste("  url\t\t= {", x$url, "}", sep = ""),
+    paste("  doi\t\t= {", x$doi, "}", sep = ""),
+    if(url) paste("  url\t\t= {", x$url, "}", sep = "") else NULL,
     "}")
   return(rval)
 }
@@ -164,14 +168,14 @@ tex2CITATION <- function(file, name = NULL)
     paste("  volume       = \"", x$volume, "\",", sep = ""),
     paste("  number       = \"", x$number, "\",", sep = ""),
     paste("  pages        = \"1--", x$pages, "\",", sep = ""),
-    paste("  url          = \"", x$url, "\",", sep = ""),
+    paste("  doi          = \"", x$doi, "\",", sep = ""),
     "",
     "  textVersion  =",
     paste("  paste(\"", paste(x$authorlist, collapse = ", "), " (", x$year, ").\",", sep = ""),
     paste("        \"", gsub("}", "",
       gsub("{", "", x$plaintitle, fixed = TRUE), fixed = TRUE), ".\",", sep = ""),
     paste("        \"Journal of Statistical Software, ", x$volume, "(", x$number, "), 1-", x$pages, ".\",", sep = ""),
-    paste("        \"URL ", x$url, ".\")", sep = ""),
+    paste("        \"doi:", x$doi, ".\")", sep = ""),
     ")",
     ""
   )

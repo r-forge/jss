@@ -49,7 +49,7 @@ get_authors <- function(x) {
     str
 }
 get_doi <- function(x) {
-    prefix <- "10XXXX/"  #replace with our real prefix when we are assigned one
+    prefix <- "10.18637/"  #replace with our real prefix when we are assigned one
     suffix <- paste(x$year, "v", x$volume, "i", x$number, sep="")
     paste(prefix,suffix, sep="")
 }

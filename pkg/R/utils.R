@@ -103,7 +103,7 @@ jssbib <- function(file, keytype = c("author", "number"))
   jsskey <- paste("v", vol3, stype, num2, sep = "")
 
   stopifnot(isTRUE(identical(tail(strsplit(file, "/")[[1]], 1),
-    as.character(paste(jsskey, ".tex", sep = "")))))
+    as.character(paste(gsub("v0", "v", jsskey), ".tex", sep = "")))))
 
   rval <- list(
     authorlist = strsplit(auth, ", ")[[1]],

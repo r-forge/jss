@@ -41,7 +41,7 @@ get_authors <- function(x) {
 						<surname>", x$author[[i]]$family, "</surname> \n
 					</person_name>\n", sep="")
         else
-            str <- paste(str, "<person_name contributor_role=\"author\"> \n
+            str <- paste(str, "<person_name sequence=\"additional\" contributor_role=\"author\"> \n
 						<given_name>", paste(x$author[[i]]$given, collapse=" "), "</given_name> \n
 						<surname>", x$author[[i]]$family, "</surname> \n
 					</person_name>\n", sep="")
@@ -49,7 +49,7 @@ get_authors <- function(x) {
     str
 }
 get_doi <- function(x) {
-    prefix <- "10.18637/"  #replace with our real prefix when we are assigned one
+    prefix <- "10.18637/"  
     suffix <- paste(x$year, "v", x$volume, "i", x$number, sep="")
     paste(prefix,suffix, sep="")
 }
@@ -95,5 +95,5 @@ newDeposit <- function(file, out="out.xml") {
     ## once we have a password, login we can test via
     ## http://test.crossref.org, see http://help.crossref.org/verifying_your_xml
     ## make real deposits with https://doi.crossref.org/servlet/deposit
-    #system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=USERNAME\' -F \'login_passwd=PASSWORD\' -F \'fname=", file, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
+    system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
 }

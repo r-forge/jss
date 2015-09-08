@@ -14,11 +14,28 @@ print_depositor <- function(file) {
 			<email_address>doi@jstatsoft.org</email_address> \n
                             </depositor>\n", file=file, append=TRUE)
 }
-print_journal_metadata <- function(file) {
+print_journal_metadata <- function(file, type) {
+    if(type == "article") {
+        tit <- "Journal of Statistical Software"
+        atit <- "J. Stat. Soft."
+    }
+    else if(type == "bookreview") {
+        tit <- "Journal of Statistical Software, Book Reviews"
+        atit <- "J. Stat. Soft., B. Rev."
+    }
+    else if(type == "softwarereview") {
+        tit <- "Journal of Statistical Software, Software Reviews"
+        atit <- "J. Stat. Soft., S. Rev."
+    }
+    else if(type == "codesnippet") {
+        tit <- "Journal of Statistical Software, Code Snippets"
+        atit <- "J. Stat. Soft., C. Snip."
+    }
+        
     cat("<journal_metadata language=\"en\"> \n
-	          <full_title>Journal of Statistical Software</full_title> \n
-				<abbrev_title>J. Stat. Soft.</abbrev_title> \n
-				<issn media_type=\"print\">1548-7660</issn> \n
+	          <full_title>", tit, "</full_title> \n
+				<abbrev_title>", atit, "</abbrev_title> \n
+				<issn media_type=\"electronic\">1548-7660</issn> \n
 				<coden>JSSOBK</coden> \n
 	</journal_metadata>\n\n", file=file, append=TRUE)
 }
@@ -49,14 +66,24 @@ get_authors <- function(x) {
     str
 }
 get_doi <- function(x) {
-    prefix <- "10.18637/"  
-    suffix <- paste(x$year, "v", x$volume, "i", x$number, sep="")
+    prefix <- "10.18637/"
+    if(nchar(x$volume) == 2)
+        v <- "v0"
+    else v <- "v" 
+    suffix <- paste("jss.", v, x$volume, ".i", x$number, sep="")
     paste(prefix,suffix, sep="")
+}
+strip_title <- function(x) {
+    x <- gsub("\\\\proglang", "", x)
+    x <- gsub("\\\\pkg", "", x)
+    x <- gsub("\\\\code", "", x)
+    return(x)
 }
 print_journal_article <- function(x, file) {
     cat(paste("<journal_article publication_type=\"full_text\"> \n
 				<titles> \n
-					<title>", x$title, "</title> \n
+					<title>", strip_title(x$title),
+              "</title> \n
 				</titles> \n
 				<contributors> \n", get_authors(x), 
 				"</contributors> \n
@@ -72,7 +99,8 @@ print_journal_article <- function(x, file) {
 				</doi_data>\n
 			</journal_article>\n", sep=""), file=file, append=TRUE)
 }
-newDeposit <- function(file, out="out.xml") {
+newDeposit <- function(file, type="article", out="out.xml") {
+    ## possible types are bookreview, article, codesnippet, softwarereview
     x <- bibtex::read.bib(file)
     cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n
 <doi_batch version=\"4.3.4\" xmlns=\"http://www.crossref.org/schema/4.3.4\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.crossref.org/schema/4.3.4 http://www.crossref.org/schema/deposit/crossref4.3.4.xsd\"> \n
@@ -84,16 +112,18 @@ newDeposit <- function(file, out="out.xml") {
 	</head>\n
 	<body>\n
             <journal>\n", file=out, append=TRUE)
-    print_journal_metadata(out)
-    print_journal_issue(x, out)
-    ## might want to have this print out multiple articles stored in a bib file
-    ## in the future, e.g., all articles in a volume
-    print_journal_article(x, out)
+   
+    print_journal_metadata(out, type)
+    ## this generates xml for all bib items stored in a bib file
+    ## do not put multiple journal titles in one bib file for deposit
+    for(i in 1:length(x)) 
+        print_journal_article(x[[i]], out)
     cat("</journal> \n
 	</body> \n 
        </doi_batch>", file=out, append=TRUE)
     ## once we have a password, login we can test via
     ## http://test.crossref.org, see http://help.crossref.org/verifying_your_xml
     ## make real deposits with https://doi.crossref.org/servlet/deposit
-    system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
+    system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
+                       
 }

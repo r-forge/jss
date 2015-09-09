@@ -10,8 +10,8 @@ print_timestamp <- function(file) {
 }
 print_depositor <- function(file) {
     cat("<depositor> \n
-			<depositor_name>Journal of Statistical Software</depositor_name> \n
-			<email_address>doi@jstatsoft.org</email_address> \n
+			<depositor_name>Foundation for Open Access Statistics</depositor_name> \n
+			<email_address>doi@foastat.org</email_address> \n
                             </depositor>\n", file=file, append=TRUE)
 }
 print_journal_metadata <- function(file, type) {
@@ -30,8 +30,7 @@ print_journal_metadata <- function(file, type) {
     else if(type == "codesnippet") {
         tit <- "Journal of Statistical Software, Code Snippets"
         atit <- "J. Stat. Soft., C. Snip."
-    }
-        
+    }       
     cat("<journal_metadata language=\"en\"> \n
 	          <full_title>", tit, "</full_title> \n
 				<abbrev_title>", atit, "</abbrev_title> \n
@@ -106,15 +105,13 @@ htmlify <- function(x, collapse = "\n") {
             p1 <- gsub("!!!", "<", p1)
             xx[i] <- paste(p1, p2)
             if(i < length(xx))
-                xx[i] <- paste(xx[i], "<mml:math")
-            
+                xx[i] <- paste(xx[i], "<mml:math")       
         }
     }
     x <- paste(xx, collapse=" ")
     ## need to remove all <font face="helvetica">; parser chokes 
     x <- gsub("<font face=\"helvetica\">", "<i>", x, fixed = TRUE)
     x <- gsub("</font>", "</i>", x, fixed = TRUE)
-
     return(x) 
 }
 
@@ -145,7 +142,6 @@ newDeposit <- function(file, type="article", out="out.xml") {
 cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n
 <doi_batch version=\"4.3.4\" xmlns=\"http://www.crossref.org/schema/4.3.4\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.crossref.org/schema/4.3.4 http://www.crossref.org/schema/deposit/crossref4.3.4.xsd\"  xmlns:mml=\"http://www.w3.org/1998/Math/MathML\"> \n
 <head>", file=out)
-    
     print_doi_batch_id(out)
     print_timestamp(out)
     print_depositor(out)
@@ -153,7 +149,6 @@ cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n
 	</head>\n
 	<body>\n
             <journal>\n", file=out, append=TRUE)
-   
     print_journal_metadata(out, type)
     ## this generates xml for all bib items stored in a bib file
     ## do not put multiple journal titles in one bib file for deposit

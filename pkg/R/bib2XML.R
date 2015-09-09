@@ -70,13 +70,14 @@ get_doi <- function(x, type) {
     i <- switch(as.character(type), article = ".i", codesnippet = ".c",
                 bookreview = ".b", softwarereview = ".s",
                 stop("type should be: article, codesnippet, bookreview or softwarereview"))
-    n <- switch(nchar(x$number), "00", "0", "")
+    n <- switch(nchar(x$number), "0", "")
     if(is.null(v) || is.null(n)) stop("Problem with spec. of vol. or issue.")
-    suffix <- paste("jss.", v, x$volume, i, n, sep="")
+    suffix <- paste("jss.", v, x$volume, i, n, x$number, sep="")
     paste(prefix,suffix, sep="")
 }
 htmlify <- function(x, collapse = "\n") {
-      tab <- rbind(
+   
+    tab <- rbind(
         c("\\proglang", "\\textsf"),
         c("\\pkg", "\\textbf"),
         c("\\code", "\\texttt"),
@@ -107,8 +108,8 @@ htmlify <- function(x, collapse = "\n") {
             if(i < length(xx))
                 xx[i] <- paste(xx[i], "<mml:math")       
         }
+        x <- paste(xx, collapse=" ")
     }
-    x <- paste(xx, collapse=" ")
     ## need to remove all <font face="helvetica">; parser chokes 
     x <- gsub("<font face=\"helvetica\">", "<i>", x, fixed = TRUE)
     x <- gsub("</font>", "</i>", x, fixed = TRUE)
@@ -135,6 +136,7 @@ print_journal_article <- function(x, type, file) {
 					<resource>", x$url,"</resource>\n
 				</doi_data>\n
 			</journal_article>\n", sep=""), file=file, append=TRUE)
+
 }
 newDeposit <- function(file, type="article", out="out.xml") {
     ## possible types are bookreview, article, codesnippet, softwarereview

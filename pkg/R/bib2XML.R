@@ -1,16 +1,20 @@
 print_doi_batch_id <- function(file) {
     x <- as.POSIXlt(Sys.time())
-    cat("<doi_batch_id>", paste(x$year, x$mon, x$mday, x$hour, x$min, round(x$sec), sep=""), "</doi_batch_id>\n", sep="", file=file,
+    cat("<doi_batch_id>", paste(x$year, x$mon, x$mday, x$hour, x$min,
+                                round(x$sec), sep=""), "</doi_batch_id>\n",
+        sep="", file=file,
         append=TRUE)
 }
 print_timestamp <- function(file) {
     x <- as.POSIXlt(Sys.time())
-    cat("<timestamp>", paste(x$year, x$mon, x$mday, x$hour, x$min, round(x$sec), sep=""), "</timestamp>\n", sep="", file=file,
+    cat("<timestamp>", paste(x$year, x$mon, x$mday, x$hour, x$min,
+                             round(x$sec), sep=""), "</timestamp>\n", sep="",
+        file=file,
         append=TRUE)
 }
 print_depositor <- function(file) {
     cat("<depositor> \n
-			<depositor_name>Foundation for Open Access Statistics</depositor_name> \n
+  <depositor_name>Foundation for Open Access Statistics</depositor_name> \n
 			<email_address>doi@foastat.org</email_address> \n
                             </depositor>\n", file=file, append=TRUE)
 }
@@ -33,9 +37,9 @@ print_journal_metadata <- function(file, type) {
     }       
     cat("<journal_metadata language=\"en\"> \n
 	          <full_title>", tit, "</full_title> \n
-				<abbrev_title>", atit, "</abbrev_title> \n
-				<issn media_type=\"electronic\">1548-7660</issn> \n
-				<coden>JSSOBK</coden> \n
+			<abbrev_title>", atit, "</abbrev_title> \n
+			<issn media_type=\"electronic\">1548-7660</issn> \n
+			<coden>JSSOBK</coden> \n
 	</journal_metadata>\n\n", file=file, append=TRUE)
 }
 print_journal_issue <- function(x, file) {
@@ -52,14 +56,19 @@ print_journal_issue <- function(x, file) {
 get_authors <- function(x) {
     for(i in 1:length(x$author)) {
         if(i == 1)
-            str <- paste("<person_name sequence=\"first\" contributor_role=\"author\"> \n
-						<given_name>", paste(x$author[[i]]$given, collapse=" "), "</given_name> \n
-						<surname>", x$author[[i]]$family, "</surname> \n
+            str <- paste("<person_name sequence=\"first\"
+contributor_role=\"author\"> \n <given_name>",
+                         tth::tth(paste(x$author[[i]]$given, collapse=" ")),
+                         "</given_name> \n
+			 <surname>",
+                         tth::tth(x$author[[i]]$family), "</surname> \n
 					</person_name>\n", sep="")
         else
-            str <- paste(str, "<person_name sequence=\"additional\" contributor_role=\"author\"> \n
-						<given_name>", paste(x$author[[i]]$given, collapse=" "), "</given_name> \n
-						<surname>", x$author[[i]]$family, "</surname> \n
+            str <- paste(str, "<person_name sequence=\"additional\"
+contributor_role=\"author\"> \n <given_name>",
+                         tth::tth(paste(x$author[[i]]$given, collapse=" ")),
+                         "</given_name> \n <surname>",
+                         tth::tth(x$author[[i]]$family), "</surname> \n
 					</person_name>\n", sep="")
     }
     str
@@ -75,8 +84,7 @@ get_doi <- function(x, type) {
     suffix <- paste("jss.", v, x$volume, i, n, x$number, sep="")
     paste(prefix,suffix, sep="")
 }
-htmlify <- function(x, collapse = "\n") {
-   
+htmlify <- function(x, collapse = "\n") {   
     tab <- rbind(
         c("\\proglang", "\\textsf"),
         c("\\pkg", "\\textbf"),
@@ -162,6 +170,9 @@ cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n
     ## test via
     ## http://test.crossref.org, see http://help.crossref.org/verifying_your_xml
     ## make real deposits with https://doi.crossref.org/servlet/deposit
-    #system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
+
+    ##system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
+
+    #system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://doi.crossref.org/servlet/deposit", sep=""))
                        
 }

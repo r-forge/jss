@@ -1,0 +1,41 @@
+make_jss_bib <- function(dir = "/home/zeileis/Work/JSS/Publications", file = "jss.bib",
+  key_prefix = "jss:", keytype = "number", ...)
+{
+  dir <- unlist(lapply(file.path(dir, base::dir(dir, pattern = "v")), function(d) {
+    vd <- base::dir(d, pattern = "v")
+    vd <- vd[order(gsub("i", "a", vd))]
+    file.path(d, vd)
+  }))
+  rval <- sapply(dir, function(d) format(jss(d),
+    "BibTeX", keyprefix = keyprefix, keytype = keytype, ...))
+  if(is.null(file) || identical(file, FALSE)) {
+    return(rval)
+  } else {
+    writeLines(rbind(rval, ""), "jss.bib")
+    invisible(rval)
+  }
+}
+
+make_metainfo <- function(x = ".", ...) {
+  if(!inherits(x, "jss")) x <- jss(x)  
+  tpt <- dir(x$directory, pattern = "\\.tpt$")  
+  if(length(tpt) > 0L) file.remove(tpt)
+  for(i in dir(x$directory, pattern = "\\.pdf$")  ) compactPDF(i)
+  make_citation(x)
+  make_readme(x)
+  invisible(x)
+}
+
+make_citation <- function(x = ".", ...) {
+  if(!inherits(x, "jss")) x <- jss(x)  
+  ct <- format(x, "CITATION")
+  if(!is.null(ct)) writeLines(ct, file.path(x$directory, "CITATION"))
+  invisible(ct)
+}
+
+make_readme <- function(x = ".", ...) {
+  if(!inherits(x, "jss")) x <- jss(x)  
+  rd <- format(x, "README")
+  if(!is.null(rd)) writeLines(rd, file.path(x$directory, "README.txt"))
+  invisible(rd)
+}

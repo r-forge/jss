@@ -1,0 +1,25 @@
+import("tools", "utils")
+
+export(
+  "jss",
+  
+  "make_jss_bib",
+  "make_metainfo",
+  "make_citation",
+  "make_readme",
+  
+  "fix_bib",
+  "fix_rscript",
+
+  "as.bibentry",
+  "bibtool",
+  "code_lines",
+  "add_doi",
+  "get_doi",
+  "shortcites"
+)
+
+
+S3method("as.bibentry", "jss")
+S3method("as.character", "jss")
+S3method("format", "jss")

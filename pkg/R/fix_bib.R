@@ -1,6 +1,6 @@
-library("bibtex")
-
-bibtool <- function(tex = NULL, temp = "_foo.bib", orig = "_orig.bib") {
+bibtool <- function(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
+{
+  ## use supplied/available .tex file and call pdflatex
   if(is.null(tex)) {
     x <- dir()
     tex <- which(substr(x, nchar(x) - 2L, nchar(x)) == "tex")
@@ -9,68 +9,98 @@ bibtool <- function(tex = NULL, temp = "_foo.bib", orig = "_orig.bib") {
   if(length(tex) != 1L) stop("need exactly one .tex file")
   stopifnot(file.exists(tex))
   system(paste("pdflatex", tex))
-  texbase <- gsub(".tex", "", tex, fixed = TRUE)
   
-  aux <- paste(texbase, "aux", sep = ".")
+  ## determine .bib file used and call bibtool
+  texbase <- tools::file_path_sans_ext(tex)  
+  aux <- paste0(texbase, ".aux")
   aux <- readLines(aux)
   aux <- aux[substr(aux, 2L, 8L) == "bibdata"]
   bibbase <- substr(aux, 10L, nchar(aux) - 1L)
   bib <- paste(bibbase, "bib", sep = ".")
   stopifnot(file.exists(bib))
-
   system(paste("bibtool -x", texbase, ">", temp))
-  system(paste("texclean", tex))
 
+  ## clean up temporary LaTeX files and rename .bib
+  suppressWarnings(file.remove(paste0(texbase, ".", c(
+    "aux", "bbl", "blg", "cp", "cps", "dvi", "fdx", "fn", "fns",
+    "lof", "log", "ky", "kys", "nav", "out", "pg", "pgs", "snm",
+    "toc", "tp", "vdx", "vr", "vrb", "vrs", "tpt"))))
   file.rename(bib, orig)
   file.rename(temp, bib)
-
-  invisible()
-}
-
-write.bib <- function(x, file = "Rbib.bib") {
-  stopifnot(inherits(x, "bibentry"))
-  writeLines(toBibtex(x), file)
 }
 
 shortcites <- function(x, maxlength = 6) {
+  if(is.character(x)) x <- bibtex::read.bib(x)
   rval <- x$key[sapply(x$author, length) > maxlength]
-  writeLines(sprintf("\\shortcites{%s}",
-    paste(rval, collapse = ",")))
+  if(length(rval) < 1L) return(character(0))
+  writeLines(sprintf("\\shortcites{%s}", paste(rval, collapse = ",")))
   invisible(rval)
 }
 
-## FIXME: title style, software titles, with discussion, A.-B. Name, editor field?
-
-bibfix <- function(x) {
+fix_bib <- function(x, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
+{
+  file <- file
+  if(is.character(x)) {
+    if(bibtool) {
+      tex <- gsub("\\.bib$", ".tex", x)
+      if(!file.exists(tex)) tex <- Sys.glob("*.tex")[1L]
+      bibtool(tex = tex, orig = orig)
+    } else {
+      file.copy(x, orig)
+    }
+    x <- bibtex::read.bib(x)
+  }
   stopifnot(inherits(x, "bibentry"))
   stopifnot(length(x) >= 1L)
+
   for(i in 1:length(x)) {
-    if(!is.null(x[i]$author))    x[i]$author    <- fix_person(x[i]$author)
-    if(!is.null(x[i]$editor))    x[i]$editor    <- fix_person(x[i]$editor)
-    if(!is.null(x[i]$title))     x[i]$title     <- fix_title(x[i]$title)
-    if(!is.null(x[i]$booktitle)) x[i]$booktitle <- fix_title(x[i]$booktitle)
-    if(!is.null(x[i]$journal))   x[i]$journal   <- fix_journal(x[i]$journal)
-    if(!is.null(x[i]$publisher)) x[i]$publisher <- fix_publisher(x[i]$publisher)
-    if(!is.null(x[i]$edition))   x[i]$edition   <- fix_edition(x[i]$edition)
+    if(!is.null(x[i]$author))    x[i]$author    <- fix_bib_person(x[i]$author)
+    if(!is.null(x[i]$editor))    x[i]$editor    <- fix_bib_person(x[i]$editor)
+    if(!is.null(x[i]$title))     x[i]$title     <- fix_bib_title(x[i]$title)
+    if(!is.null(x[i]$booktitle)) x[i]$booktitle <- fix_bib_title(x[i]$booktitle)
+    if(!is.null(x[i]$journal))   x[i]$journal   <- fix_bib_journal(x[i]$journal)
+    if(!is.null(x[i]$publisher)) x[i]$publisher <- fix_bib_publisher(x[i]$publisher)
+    if(!is.null(x[i]$edition))   x[i]$edition   <- fix_bib_edition(x[i]$edition)
+    if(!is.null(x[i]$doi))       x[i]$doi       <- fix_bib_doi(x[i]$doi) else {
+      if(doi & tolower(x[i]$bibtype) %in% c("article", "book")) x[i]$doi <- get_doi(x[i])    
+    }
+    if(!is.null(x[i]$doi)) {
+      if(x[i]$doi == "") x[i]$doi <- NULL
+      if(!is.null(x[i]$doi) && !is.null(x[i]$url)) x[i]$url <- NULL
+    }
     xi <- unclass(x[i])
-    for(j in c("abstract", "date-added", "date-modified", "bdsk-url-1", "bdsk-url-2", "keywords", "annote", "month", "owner", "timestamp")) xi[[1]][[j]] <- NULL
+    for(j in c("abstract", "date-added", "date-modified", "bdsk-url-1", "bdsk-url-2", "keywords", "annote", "month", "owner", "timestamp")) xi[[1L]][[j]] <- NULL
     class(xi) <- "bibentry"
     x[i] <- xi
   }
-  x
+
+  if(shortcites) shortcites(x)
+  
+  if(is.character(file)) {
+    bibtex::write.bib(x, file = file)
+    invisible(x)
+  } else {
+    return(x)
+  }
 }
 
-fix_title <- function(x) {
+## FIXME: with discussion
+fix_bib_title <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
-  x <- fix_tabspace(x)
+  x <- fix_bib_tabspace(x)
+  if(substr(x, 1L, 1L) == "{" && substr(x, 1L, nchar(x)) == "}" && !grepl("{", substr(x, 2L, nchar(x) - 1L, fixed = TRUE))) {
+    x <- substr(x, 2L, nchar(x) - 1L)
+  }
+  x <- toTitleCase(x, tolower = identity, either = "FlexMix",
+    lower = readLines(system.file("case", "lower.txt", package = "jss")))
   return(x)
 }
 
-fix_edition <- function(x) {
+fix_bib_edition <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
-  x <- fix_tabspace(x)
+  x <- fix_bib_tabspace(x)
   x1 <- tolower(x)
   if(x1 == "first") return("1st")
   if(x1 == "second") return("2nd")
@@ -82,20 +112,22 @@ fix_edition <- function(x) {
   return(x)
 }
 
-fix_person <- function(x) {
+fix_bib_person <- function(x) {
   stopifnot(inherits(x, "person"))
   if(length(x) < 1L) return(x)
   for(i in 1:length(x)) {
     if(!is.null(x$given) && length(grep(".", x$given, fixed = TRUE) > 0L)) {
-      x[i] <- person(fix_tabspace(gsub(".", ". ", x[i]$given, fixed = TRUE)), fix_tabspace(x[i]$family))
+      giv <- fix_bib_tabspace(gsub(".", ". ", x[i]$given, fixed = TRUE))
+      giv <- gsub(". -", ".-", giv, fixed = TRUE)
     } else {
-      x[i] <- person(given = fix_tabspace(x[i]$given), family = fix_tabspace(x[i]$family))
+      giv <- fix_bib_tabspace(x[i]$given)
     }
+    x[i] <- person(given = giv, family = fix_bib_tabspace(x[i]$family))
   }
   return(x)
 }
 
-fix_tabspace <- function(x) {
+fix_bib_tabspace <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
   x <- gsub("  ", " ", x, fixed = TRUE)
@@ -107,21 +139,19 @@ fix_tabspace <- function(x) {
   return(x)
 }
 
-fix_publisher <- function(x) {
+fix_bib_publisher <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
-  x <- fix_tabspace(x)
-  if(is.character(x)) {
-    if(length(grep("Wiley", x))) return("John Wiley \\& Sons")
-    if(length(grep("Springer", x))) return("Springer-Verlag")
-    return(x)
-  }
+  x <- fix_bib_tabspace(x)
+  if(length(grep("Wiley", x))) return("John Wiley \\& Sons")
+  if(length(grep("Springer", x))) return("Springer-Verlag")
+  return(x)
 }
 
-fix_journal <- function(x) {
+fix_bib_journal <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
-  x <- fix_tabspace(x)
+  x <- fix_bib_tabspace(x)
   if(is.character(x)) {
     if(x == "American Statistician") return("The American Statistician")
     if(x == "Annals of Statistics") return("The Annals of Statistics")
@@ -141,9 +171,7 @@ fix_journal <- function(x) {
   }
 }
 
-## rcrossref tools, still need improvement
-
-fix_doi <- function(x) {
+fix_bib_doi <- function(x) {
   x <- strsplit(x, "/", fixed = TRUE)
   x <- t(sapply(x, function(y) if(length(y) >= 2L) tail(y, 2L) else c("", "")))
   ok <- substr(x[, 1L], 1L, 3L) == "10." & apply(nchar(x) >= 1L, 1L, all)
@@ -155,9 +183,9 @@ fix_doi <- function(x) {
 
 get_doi <- function(x, minscore = 1.5) {
   ## set up query string
-  if(inherits(x, "bibentry")) {
-    if(!is.null(x$doi)) return(fix_doi(x$doi))
-    if(!is.null(x$url) && fix_doi(x$url) != "") return(fix_doi(x$url))
+  if(is.list(x)) {
+    if(!is.null(x$doi)) return(fix_bib_doi(x$doi))
+    if(!is.null(x$url) && fix_bib_doi(x$url) != "") return(fix_bib_doi(x$url))
     x$url <- NULL
     qry <- format(x) ## FIXME better exploit the available information in setting up query?
   } else {
@@ -172,10 +200,15 @@ get_doi <- function(x, minscore = 1.5) {
 }
 
 add_doi <- function(x, file = "out.bib", minscore = 1.5) {
-    y <- bibtex::read.bib(x)
+    y <- if(inherits(x, "bibentry")) x else bibtex::read.bib(x)
     dois <- sapply(y, get_doi, minscore = minscore)
     for(i in 1:length(dois)) 
         if(nchar(dois[i]) > 0) y[i]$doi <- dois[i]
           #or:# y[i]$url <- paste("http://dx.doi.org/", dois[i], sep = "")
-    bibtex::write.bib(y, file = file)
+    if(is.character(file)) {
+      bibtex::write.bib(y, file = file)
+      invisible(y)
+    } else {
+      return(y)
+    }
 }

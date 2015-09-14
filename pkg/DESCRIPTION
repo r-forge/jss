@@ -1,13 +1,14 @@
 Package: jss
-Version: 0.0-1
-Date: 2014-10-12
+Version: 0.1-0
+Date: 2015-09-13
 Title: Journal of Statistical Software Utilities
 Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"),
              person(given = "Bettina", family = "Gruen", role = "aut", email = "Bettina.Gruen@jku.at"),
-	     person(given = "Jane", family = "Carlen", role = "ctb", email = "jcarlen@ucla.edu"))
+	     person(given = "Jane", family = "Carlen", role = "ctb", email = "jcarlen@ucla.edu"),
+	     person(given = "R Core Team", role = "ctb", comment = "utils::as.person, tools::toTitleCase"))
 Description: R functions and tools for computating on the LaTeX/BibTeX source code of manuscripts for the
-	Journal of Statistical Software (http://www.jstatsoft.org/)
+	Journal of Statistical Software (http://www.jstatsoft.org/).
 Depends: R (>= 2.15.0), tools, utils
-Suggests: bibtex, formatR
+Suggests: bibtex, formatR, rcrossref
 License: GPL-2 | GPL-3
 URL: http://jss.R-Forge.R-project.org/

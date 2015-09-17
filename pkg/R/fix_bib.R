@@ -122,7 +122,7 @@ fix_bib_person <- function(x) {
     } else {
       giv <- fix_bib_tabspace(x[i]$given)
     }
-    x[i] <- person(given = giv, family = fix_bib_tabspace(x[i]$family))
+    x[i] <- person(given = strsplit(giv, " ", fixed = TRUE)[[1L]], family = fix_bib_tabspace(x[i]$family))
   }
   return(x)
 }
@@ -163,6 +163,7 @@ fix_bib_journal <- function(x) {
       y <- gsub("The", "", y, fixed = TRUE)
       y <- gsub(" ", "", y, fixed = TRUE)
       y <- gsub(":", "", y, fixed = TRUE)
+      y <- gsub(",", "", y, fixed = TRUE)
       y <- substr(y, 1L, 1L)
       if(y %in% c("A", "B", "C", "D")) return(paste("Journal of the Royal Statistical Society", y))
       warning("could not fix JRSS journal name")

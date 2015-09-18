@@ -89,9 +89,9 @@ fix_bib_title <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
   x <- fix_bib_tabspace(x)
-  if(substr(x, 1L, 1L) == "{" && substr(x, 1L, nchar(x)) == "}" && !grepl("{", substr(x, 2L, nchar(x) - 1L, fixed = TRUE))) {
-    x <- substr(x, 2L, nchar(x) - 1L)
-  }
+  ## if(substr(x, 1L, 1L) == "{" && substr(x, 1L, nchar(x)) == "}" && !grepl("{", substr(x, 2L, nchar(x) - 1L))) {
+  ##   x <- substr(x, 2L, nchar(x) - 1L)
+  ## }
   x <- toTitleCase(x, tolower = identity, either = "FlexMix",
     lower = readLines(system.file("case", "lower.txt", package = "jss")))
   return(x)

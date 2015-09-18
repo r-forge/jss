@@ -205,7 +205,7 @@ as.bibentry.jss <- function(x, keytype = c("number", "author"), doi = TRUE, url 
 as.person.jss <- function(x) x$person
 
 as.character.jss <- function(x, ...) {
-  format(x, ...)
+  format.jss(x, ...)
 }
 
 format.jss <- function(x, style = "BibTeX", ...) {

@@ -19,7 +19,7 @@ bibtool(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
 
 shortcites(x, maxlength = 6)
 
-get_doi(x, minscore = 1.5) {
+get_doi(x, minscore = 1.5)
 add_doi(x, file = "out.bib", minscore = 1.5)
 }
 
@@ -45,6 +45,15 @@ add_doi(x, file = "out.bib", minscore = 1.5)
 }
 
 \details{
+The \code{fix_bib} function is a utility to automatically bring a .bib
+file almost into JSS style. By default, it proceeds by reading a .bib file
+using \code{\link[bibtex]{read.bib}}, omitting unused entries using
+\code{bibtool}, modifying author names, titles, journals, etc. if necessary,
+adding DOIs for articles and books using \code{\link[rcrossref]{cr_works}},
+and writing the result again to the same .bib file.
+
+Some steps can be switched off by setting the corresponding arguments.
+Standalone functions for these steps are also provided.
 }
 
 \value{
@@ -61,10 +70,10 @@ and DOIs, respectively.
   \code{\link[jss]{jss}}
 }
 
-\example{
-bibfile <- system.file("jss", "bib", "example.bib")
+\examples{
+bibfile <- system.file("bib", "example.bib", package = "jss")
 
-if(require("bibtex")){
+if(require("bibtex")) {
 
 ## read BibTeX entry as currently stored
 bde1 <- read.bib(bibfile)
@@ -81,8 +90,9 @@ toBibtex(bde2)
 ## This has
 ## - a capitalized title,
 ## - correctly spaces the middle initials,
-## - unifies the JRSS journal name,
-## - and the DOI could be added by setting doi = TRUE.
+## - unifies the TAS journal name,
+## - and the DOI could be added by setting doi = TRUE or manually queried via
+## get_doi(bde2)
 }
 }
 

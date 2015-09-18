@@ -1,5 +1,5 @@
 make_jss_bib <- function(dir = "/home/zeileis/Work/JSS/Publications", file = "jss.bib",
-  key_prefix = "jss:", keytype = "number", ...)
+  keyprefix = "jss:", keytype = "number", ...)
 {
   dir <- unlist(lapply(file.path(dir, base::dir(dir, pattern = "v")), function(d) {
     vd <- base::dir(d, pattern = "v")

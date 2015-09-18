@@ -3,11 +3,16 @@ import("tools", "utils")
 export(
   "jss",
   
-  "make_jss_bib",
   "make_metainfo",
   "make_citation",
   "make_readme",
+
+  "make_jss_bst",
+  "make_jss_cls",
+  "make_jss_style",
   
+  "make_jss_bib",
+
   "fix_bib",
   "fix_rscript",
 

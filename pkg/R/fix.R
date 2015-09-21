@@ -140,7 +140,15 @@ toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower
                        tolower(substring(x, 3L)))
             else paste0(toupper(x1), tolower(substring(x, 2L)))
         }
-        xx <- .Call(tools:::splitString, x, ' -/"()') ## for JSS testing with tools:::
+	
+        xx <- .Call(tools:::splitString, x, ' -/"()') ## for JSS testing with tools:::	
+	## RSplitString <- function(s) {
+        ##   chars <- unlist(strsplit(s, NULL))
+        ##   ind <- chars %in% unlist(strsplit(" -/\"()", NULL))
+        ##   pos <- cumsum(rle(ind)$lengths)
+        ##   substring(s, c(0L, head(pos, -1L)) + 1L, pos)
+        ## }
+	
         ## for 'alone' we could insist on that exact capitalization
         alone <- xx %in% c(alone, either)
         alone <- alone | grepl("^'.*'$", xx)

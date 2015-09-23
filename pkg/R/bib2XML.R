@@ -1,16 +1,16 @@
 print_doi_batch_id <- function(file) {
     x <- as.POSIXlt(Sys.time())
-    cat("<doi_batch_id>", paste(x$year, x$mon, x$mday, x$hour, x$min,
-                                round(x$sec), sep=""), "</doi_batch_id>\n",
+    mon <- if(nchar(x$mon) == 1) paste("0", x$mon, sep="") else x$mon
+    mday <- if(nchar(x$mday) == 1) paste("0", x$mday, sep="") else x$mday
+    hour <-  if(nchar(x$hour) == 1) paste("0", x$hour, sep="") else x$hour
+    min <-  if(nchar(x$min) == 1) paste("0", x$min, sep="") else x$min
+    sec <-  if(nchar(round(x$sec)) == 1) paste("0", round(x$sec), sep="") else round(x$sec)
+    cat("<doi_batch_id>", paste(x$year, mon, mday, hour, min, sec, sep=""), "</doi_batch_id>\n",
         sep="", file=file,
         append=TRUE)
 }
 print_timestamp <- function(file) {
-    x <- as.POSIXlt(Sys.time())
-    cat("<timestamp>", paste(x$year, x$mon, x$mday, x$hour, x$min,
-                             round(x$sec), sep=""), "</timestamp>\n", sep="",
-        file=file,
-        append=TRUE)
+    print_doi_batch_id(file)
 }
 print_depositor <- function(file) {
     cat("<depositor> \n
@@ -164,6 +164,6 @@ newDeposit <- function(file, type="article", out="out.xml") {
     
     #system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://test.crossref.org/servlet/deposit", sep=""))
 
-    system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://doi.crossref.org/servlet/deposit", sep=""))
+    #system(paste("curl -F \'operation=doMDUpload\' -F \'login_id=fast\' -F \'login_passwd=fast_827\' -F \'fname=@", out, "\' ", "https://doi.crossref.org/servlet/deposit", sep=""))
                        
 }

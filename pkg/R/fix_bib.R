@@ -122,7 +122,8 @@ fix_bib_person <- function(x) {
     } else {
       giv <- fix_bib_tabspace(x[i]$given)
     }
-    x[i] <- person(given = strsplit(giv, " ", fixed = TRUE)[[1L]], family = fix_bib_tabspace(x[i]$family))
+    if(length(giv) > 0L) giv <- strsplit(giv, " ", fixed = TRUE)[[1L]]
+    x[i] <- person(given = giv, family = fix_bib_tabspace(x[i]$family))
   }
   return(x)
 }

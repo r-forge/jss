@@ -143,6 +143,8 @@ jss <- function(dir = ".")
   month <- extract_cmd(x, "\\Month")
   url <- paste0("http://www.jstatsoft.org/v", vol2, "/", stype, num2, "/")
   doi <- paste0("10.18637/jss.v", vol3, ".", stype, num2)
+  DOI <- extract_cmd(x, "DOI")
+  if(!(DOI %in% c("", doi))) warning(sprintf("DOI needs to be fixed: \\DOI{%s}", doi))
   jsskey <- paste("v", vol3, stype, num2, sep = "")
   tit <- get_title(x, type = type)
   ttit <- strip_title(tit)
@@ -249,7 +251,7 @@ format_jss_to_citation <- function(x, package = NULL)
     paste0('  paste("', paste0(format(x$person, include = c('given', 'family')), collapse = ', '), ' (', x$year, ').",'),
     paste0('        "', x$plaintitle, '.",'),
     paste0('        "Journal of Statistical Software, ', x$volume, '(', x$number, '), 1-', x$pages, '.",'),
-    paste0('        "doi:', x$doi, '.")'),
+    paste0('        "doi:', x$doi, '")'),
     ')',
     ''
   )
@@ -263,7 +265,7 @@ format_jss_to_readme <- function(x)
   fil <- fil[!(fil %in% c(
     paste0(x$key["number"], c(".tex", ".bib", ".pdf")),
     gsub("v0", "v", paste0(x$key["number"], c(".tex", ".bib", ".pdf")), fixed = TRUE),
-    "README.txt"))]
+    "README.txt", "readme.txt", "_orig.bib"))]
 
   if(length(fil) > 0L) {
     vfil <- substr(fil, 1L, 1L) == "v"

@@ -265,7 +265,7 @@ format_jss_to_readme <- function(x)
   fil <- fil[!(fil %in% c(
     paste0(x$key["number"], c(".tex", ".bib", ".pdf")),
     gsub("v0", "v", paste0(x$key["number"], c(".tex", ".bib", ".pdf")), fixed = TRUE),
-    "README.txt", "readme.txt", "_orig.bib"))]
+    "README.txt", "readme.txt", "_orig.bib", "_orig.R", "paper.pdf"))]
 
   if(length(fil) > 0L) {
     vfil <- substr(fil, 1L, 1L) == "v"
@@ -280,8 +280,12 @@ format_jss_to_readme <- function(x)
       ifelse(file_ext(fil) == "py", "Python source code",
       ifelse(file_ext(fil) == "sas", "SAS source code",
       ifelse(file_ext(fil) == "c", "C source code",
+      ifelse(file_ext(fil) == "csv", "Supplementary data (CSV format)",
+      ifelse(file_ext(fil) == "rda", "Supplementary data (R binary format)",
+      ifelse(file_ext(fil) == "Rdata", "Supplementary data (R binary format)",
+      ifelse(file_ext(fil) == "RData", "Supplementary data (R binary format)",
       ifelse(file_ext(fil) %in% c("gz", "zip", "tar") & !vfil, "Source code",
-      "Replication materials"))))))))))))
+      "Replication materials"))))))))))))))))
   }
     
   rval <- c(

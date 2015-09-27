@@ -62,7 +62,8 @@ fix_bib <- function(x, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE,
     if(!is.null(x[i]$publisher)) x[i]$publisher <- fix_bib_publisher(x[i]$publisher)
     if(!is.null(x[i]$edition))   x[i]$edition   <- fix_bib_edition(x[i]$edition)
     if(!is.null(x[i]$doi))       x[i]$doi       <- fix_bib_doi(x[i]$doi) else {
-      if(doi & tolower(x[i]$bibtype) %in% c("article", "book")) x[i]$doi <- get_doi(x[i])    
+      if(doi & tolower(x[i]$bibtype) == "article") x[i]$doi <- get_doi(x[i]) ## could add type = "journal-article"
+      if(doi & tolower(x[i]$bibtype) == "book") x[i]$doi <- get_doi(x[i], type = "book")
     }
     if(!is.null(x[i]$doi)) {
       if(x[i]$doi == "") x[i]$doi <- NULL
@@ -122,7 +123,14 @@ fix_bib_person <- function(x) {
     } else {
       giv <- fix_bib_tabspace(x[i]$given)
     }
-    if(length(giv) > 0L) giv <- strsplit(giv, " ", fixed = TRUE)[[1L]]
+    if(length(giv) > 0L) {
+      giv <- gsub("\\\" ", "\\\"", giv, fixed = TRUE)
+      giv <- gsub("\\' ", "\\'", giv, fixed = TRUE)
+      giv <- gsub("\\` ", "\\`", giv, fixed = TRUE)
+      giv <- gsub("\\~ ", "\\~", giv, fixed = TRUE)
+      giv <- gsub("{\\c ", "\\c{", giv, fixed = TRUE)
+      giv <- strsplit(giv, " ", fixed = TRUE)[[1L]]
+    }
     x[i] <- person(given = giv, family = fix_bib_tabspace(x[i]$family))
   }
   return(x)
@@ -183,7 +191,7 @@ fix_bib_doi <- function(x) {
   return(x)  
 }
 
-get_doi <- function(x, minscore = 1.5) {
+get_doi <- function(x, minscore = 1.5, type = NULL) {
   ## set up query string
   if(is.list(x)) {
     if(!is.null(x$doi)) return(fix_bib_doi(x$doi))
@@ -198,7 +206,9 @@ get_doi <- function(x, minscore = 1.5) {
   y <- as.data.frame(rcrossref::cr_works(query = qry, limit = 1L)$data)
 
   ## use the result only if score > minscore (1.5 is very ad hoc)
-  if(y$score > minscore) return(y$DOI) else return("")
+  ok <- y$score > minscore
+  if(!is.null(type)) ok <- ok & (type == y$type)
+  if(ok) return(y$DOI) else return("")
 }
 
 add_doi <- function(x, file = "out.bib", minscore = 1.5) {

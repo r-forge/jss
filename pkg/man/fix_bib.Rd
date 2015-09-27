@@ -19,7 +19,7 @@ bibtool(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
 
 shortcites(x, maxlength = 6)
 
-get_doi(x, minscore = 1.5)
+get_doi(x, minscore = 1.5, type = NULL)
 add_doi(x, file = "out.bib", minscore = 1.5)
 }
 
@@ -42,6 +42,8 @@ add_doi(x, file = "out.bib", minscore = 1.5)
     normal cite (that does not have to be shortened).}
   \item{minscore}{numeric. Minimum score that needs to be achieved
     when querying a DOI.}
+  \item{type}{character. The reference type (e.g., \code{"journal-article"}
+    or \code{"book"}) that needs to be matched.}
 }
 
 \details{

@@ -39,3 +39,23 @@ make_readme <- function(x = ".", ...) {
   if(!is.null(rd)) writeLines(rd, file.path(x$directory, "README.txt"))
   invisible(rd)
 }
+
+make_crossref <- function(x = ".", ...) {
+  ## JSS info
+  x <- if(inherits(x, "jss")) list(x) else lapply(x, jss)
+
+  ## output file
+  file <- if(length(x) > 1L) "CROSSREF.xml" else file.path(x[[1L]]$directory, "CROSSREF.xml")
+
+  ## XML code
+  x <- lapply(x, format, style = "CrossRef")
+  x <- c(cr_head(), unlist(x), cr_foot())
+
+  ## at the moment: just create file
+  writeLines(x, file)
+
+  ## test via http://test.crossref.org (see http://help.crossref.org/verifying_your_xml)
+  ## make real deposits with https://doi.crossref.org/servlet/deposit
+  ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://test.crossref.org/servlet/deposit
+  ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit
+}

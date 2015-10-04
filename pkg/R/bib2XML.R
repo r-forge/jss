@@ -85,45 +85,6 @@ get_doi <- function(x, type) {
     suffix <- paste("jss.", v, x$volume, i, n, x$number, sep="")
     paste(prefix,suffix, sep="")
 }
-htmlify <- function(x, collapse = "\n") {   
-    tab <- rbind(
-        c("\\proglang", "\\textsf"),
-        c("\\pkg", "\\textbf"),
-        c("\\code", "\\texttt"),
-        c("\\bm", "")
-    )
-    for(i in 1:nrow(tab)) {
-        x <- gsub(tab[i,1], tab[i,2], x, fixed = TRUE)
-    }
-    x <- tth::ttm(x, mode="hex")
-    if(is.character(collapse)) x <- paste(x, collapse = collapse)
-    if(length(grep("<math", x)) > 0) {
-        xx <- strsplit(x, "<math")[[1]]
-        xx[1] <- paste(xx[1], "<mml:math")
-        for(i in 2:length(xx)) {
-            xL <- strsplit(xx[i], "</math>")
-            if(length(xL[[1]]) == 2)  {# there is something after the mathml
-                p1 <- xL[[1]][1]
-                p2 <- paste("</mml:math>", xL[[1]][2])
-            }
-            else {
-                p1 <- xx[i]
-                p2 <- ""
-            }
-            p1 <- gsub("</", "!!!/mml:", p1)
-            p1 <- gsub("<", "<mml:", p1)
-            p1 <- gsub("!!!", "<", p1)
-            xx[i] <- paste(p1, p2)
-            if(i < length(xx))
-                xx[i] <- paste(xx[i], "<mml:math")       
-        }
-        x <- paste(xx, collapse=" ")
-    }
-    ## need to remove all <font face="helvetica">; parser chokes 
-    x <- gsub("<font face=\"helvetica\">", "<i>", x, fixed = TRUE)
-    x <- gsub("</font>", "</i>", x, fixed = TRUE)
-    return(x) 
-}
 print_journal_article <- function(x, type, file) {
     cat(paste("<journal_article publication_type=\"full_text\"> \n
 				<titles> \n

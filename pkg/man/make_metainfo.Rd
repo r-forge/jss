@@ -2,6 +2,7 @@
 \alias{make_metainfo}
 \alias{make_citation}
 \alias{make_readme}
+\alias{make_crossref}
 \alias{make_jss_bib}
 
 \title{Generate Files with Metainformation for JSS Publications}
@@ -15,6 +16,7 @@ objects into text files.
 make_metainfo(x = ".", \dots)
 make_citation(x = ".", \dots)
 make_readme(x = ".", \dots)
+make_crossref(x = ".", \dots)
 }
 
 \arguments{
@@ -28,6 +30,8 @@ make_readme(x = ".", \dots)
 \code{make_readme} generates a \code{README.txt} file for internal use in JSS.
 \code{make_metainfo} generates both files and also tries to clean up and compact
 the manuscript LaTeX files.
+\code{make_crossref} generates a \code{CROSSREF.xml} file for registering DOIs
+with CrossRef.
 }
 
 \seealso{

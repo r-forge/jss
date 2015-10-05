@@ -59,10 +59,19 @@ make_crossref <- function(x = ".", ..., deposit = FALSE) {
   ## make real deposits with https://doi.crossref.org/servlet/deposit
   ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://test.crossref.org/servlet/deposit
   cmd <- "curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit"
-  if(deposit)
+  if(deposit) {
     system(cmd)
-  else
+    file.remove("CROSSREF.xml")
+  } else {
     writeLines(c("To deposit with CrossRef:", cmd))
+  }
 
   invisible(x)
+}
+
+make_ojs <- function(x = ".", ...) {
+  if(!inherits(x, "jss")) x <- jss(x)  
+  ojs <- format(x, "OJS")
+  if(!is.null(ojs)) writeLines(ojs, file.path(x$directory, "OJS.xml"))
+  invisible(ojs)
 }

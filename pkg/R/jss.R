@@ -17,6 +17,7 @@ jss <- function(dir = ".")
       stop("unknown specification of 'dir'")
     }
   }
+  file_tex0 <- tail(strsplit(file_tex, "/")[[1L]], 1L)
 
   ## supplementary files
   get_supplementary_file <- function(pattern) {
@@ -113,6 +114,46 @@ jss <- function(dir = ".")
     sapply(strsplit(x, "_", fixed = TRUE), "[", 1L)
   }
 
+  get_email <- function(x) {
+    ## convenience function for collapsing authors
+    clps <- function(x) {
+      x <- gsub(" ", "", x, fixed = TRUE)
+      x <- gsub(".", "", x, fixed = TRUE)
+      x <- gsub("\\", "", x, fixed = TRUE)
+      tolower(strsplit(x, ",")[[1L]])    
+    }
+    ## extract list of authors names (collapsed)
+    au <- clps(extract_cmd(x, "\\Plainauthor"))
+
+    ## extract address parts
+    em <- grep("\\Address", x, fixed = TRUE)
+    em <- x[(em + 1L):(min(grep("^\\}", x)[grep("^}", x) > em]) - 1L)]
+    em <- split(em, cumsum(em == "") + 1)
+
+    ## extract e-mail addresses
+    em <- lapply(em, function(z) {
+      z <- z[z != ""]
+      au <- clps(z[1L])
+      z <- unlist(strsplit(z[-1L], ", ", fixed = TRUE))
+      z <- sapply(z[grep("\\email", z, fixed = TRUE)], extract_arg)
+      z <- as.list(as.character(z))
+      if(length(z) < length(au)) {
+        z <- c(z, vector(length = length(au) - length(z), mode = "list"))
+      } else if(length(z) > length(au)) {
+        z <- z[1L:length(au)]
+      }
+      names(z) <- au
+      z
+    })
+    
+    ## try to match to authors
+    names(em) <- NULL
+    em <- do.call("c", em)
+    em <- em[au]
+    names(em) <- NULL
+    return(em)
+  }
+
   ## read in TeX
   x <- readLines(file_tex)
   
@@ -149,8 +190,12 @@ jss <- function(dir = ".")
   tit <- get_title(x, type = type)
   ttit <- strip_title(tit)
   ptit <- gsub("{", "", gsub("}", "", ttit, fixed = TRUE), fixed = TRUE)
+  pers <- as.person(auth)
+  pers$email <- get_email(x)
+  kwd <- extract_cmd(x, "\\Plainkeywords")
+  if(kwd == "") kwd <- extract_cmd(x, "\\Keywords")
 
-  if(!isTRUE(identical(tail(strsplit(file_tex, "/")[[1L]], 1L),
+  if(!isTRUE(identical(file_tex0,
     as.character(paste(gsub("v0", "v", jsskey), ".tex", sep = ""))))) {
     warning("filename and volume/issue do not match")
   }
@@ -158,7 +203,7 @@ jss <- function(dir = ".")
   rval <- list(
     key = c("number" = jsskey, "author" = author2key(auth, year)),
     author = author2tex(auth),
-    person = as.person(auth),
+    person = pers,
     title = tit,
     textitle = ttit,    
     plaintitle = ptit,
@@ -168,10 +213,12 @@ jss <- function(dir = ".")
     volume = vol,
     number = num,
     pages = get_pages(file_tex),
+    keywords = kwd,
     url = url,
     doi = doi,
     type = type,
     directory = dir,
+    pdf = paste0(file_path_sans_ext(file_tex0), ".pdf"),
     package = if(type %in% c("b", "s")) NULL else unique(c(get_pkg_from_title(tit), get_pkg_from_rpack(names(file_rpack)))),
     rpackage = (stype %in% c("i", "c")) & ((length(file_rpack) > 0L) | (length(file_rscript) > 0L)),
     readme = if(type %in% c("b", "s")) NULL else file_readme,

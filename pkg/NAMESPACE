@@ -7,6 +7,7 @@ export(
   "make_citation",
   "make_readme",
   "make_crossref",
+  "make_ojs",
 
   "make_jss_bst",
   "make_jss_cls",

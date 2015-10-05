@@ -23,6 +23,7 @@ make_metainfo <- function(x = ".", ...) {
   for(i in dir(x$directory, pattern = "\\.pdf$")  ) compactPDF(i)
   make_citation(x)
   make_readme(x)
+  make_crossref(x, deposit = FALSE)
   invisible(x)
 }
 
@@ -40,7 +41,7 @@ make_readme <- function(x = ".", ...) {
   invisible(rd)
 }
 
-make_crossref <- function(x = ".", ...) {
+make_crossref <- function(x = ".", ..., deposit = FALSE) {
   ## JSS info
   x <- if(inherits(x, "jss")) list(x) else lapply(x, jss)
 
@@ -57,5 +58,11 @@ make_crossref <- function(x = ".", ...) {
   ## test via http://test.crossref.org (see http://help.crossref.org/verifying_your_xml)
   ## make real deposits with https://doi.crossref.org/servlet/deposit
   ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://test.crossref.org/servlet/deposit
-  ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit
+  cmd <- "curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit"
+  if(deposit)
+    system(cmd)
+  else
+    writeLines(c("To deposit with CrossRef:", cmd))
+
+  invisible(x)
 }

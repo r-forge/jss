@@ -56,7 +56,8 @@ htmlify <- function(x, collapse = " ") {
 }
 
 cr_head <- function(id = format(Sys.time(), "%Y%m%d%H%M%S")) {
-  c('<doi_batch version="4.3.4" schemaLocation="http://www.crossref.org/schema/4.3.4 http://www.crossref.org/schema/deposit/crossref4.3.4.xsd" xmlns="http://www.crossref.org/schema/4.3.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mml="http://www.w3.org/1998/Math/MathML">',
+  c('<?xml version="1.0" encoding="UTF-8"?>',
+    '<doi_batch version="4.3.4" xmlns="http://www.crossref.org/schema/4.3.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.crossref.org/schema/4.3.4 http://www.crossref.org/schema/deposit/crossref4.3.4.xsd"  xmlns:mml="http://www.w3.org/1998/Math/MathML">',
     '<head>',
     sprintf('  <doi_batch_id>%s</doi_batch_id>', id),
     sprintf('  <timestamp>%s</timestamp>', id),

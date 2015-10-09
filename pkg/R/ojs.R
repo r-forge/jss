@@ -1,27 +1,29 @@
 format_jss_to_ojs <- function(x)
 {
   ## supplemental files
-  supp <- file.path(x$directory, "README.txt")
-  supp <- if(file.exists(supp)) readLines(supp) else format(x, "README")
-  if(length(supp) >= 6L) {
-    nsupp <- length(supp) - 5L
-    if(any(supp[-(1L:5L)] == "")) nsupp <- min(which(supp[-(1L:5L)] == "")) - 1L
-  } else {
-    nsupp <- 0L
-  }
-  if(nsupp > 0L) {
-    supp <- strsplit(supp[6L:(5L + nsupp)], "\\:[[:space:]]+")
-    supp <- lapply(supp, function(z) ojs_supplemental_file(z[1], z[2], x$directory))
-    supp <- unlist(supp)
-  } else {
+  if(x$type %in% c("bookreview", "softwarereview")) {
     supp <- NULL
+  } else {
+    supp <- file.path(x$directory, "README.txt")
+    supp <- if(file.exists(supp)) readLines(supp) else format(x, "README")
+    if(length(supp) >= 6L) {
+      nsupp <- length(supp) - 5L
+      if(any(supp[-(1L:5L)] == "")) nsupp <- min(which(supp[-(1L:5L)] == "")) - 1L
+    } else {
+      nsupp <- 0L
+    }
+    if(nsupp > 0L) {
+      supp <- strsplit(supp[6L:(5L + nsupp)], "\\:[[:space:]]+")
+      supp <- lapply(supp, function(z) ojs_supplemental_file(z[1], z[2], x$directory))
+      supp <- unlist(supp)
+    } else {
+      supp <- NULL
+    }
   }
 
-  c(ojs_head(x$key[1L], x$doi, x$plaintitle),
-    ojs_abstract(file.path(x$directory, x$pdf)),
-    '  <indexing>',
-    sprintf('    <subject locale="en_US">%s</subject>', gsub(", ", "; ", x$keywords, fixed = TRUE)),
-    '  </indexing>',
+  c(ojs_head(x$key[1L], x$doi, x$textitle),
+    ojs_abstract(file.path(x$directory, x$pdf), x$type),
+    ojs_indexing(x$keywords),
     '',
 
     ojs_author(x$person),
@@ -40,16 +42,28 @@ format_jss_to_ojs <- function(x)
   )
 }
 
+ojs_indexing <- function(keywords) {
+  if(is.null(keywords) || keywords == "") {
+    return(NULL)
+  } else {
+    c('  <indexing>',
+      sprintf('    <subject locale="en_US">%s</subject>', gsub(", ", "; ", keywords, fixed = TRUE)),
+      '  </indexing>'
+    )
+  }
+}
+
 ojs_author <- function(person) {
   attr <- rep("", length(person))
-  given <- sapply(listify(person$given), paste, collapse = " ")
+  first <- sapply(listify(person$given), "[", 1L)
+  middle <- sapply(listify(person$given), function(x) if(length(x) == 1L) "" else paste(x[-1L], collapse = " "))
   family <- sapply(listify(person$family), paste, collapse = " ")
   email <- sapply(listify(person$email), paste, collapse = " ")
   attr[which(email != "")[1L]] <- ' primary_contact="true"'
   email[email == ""] <- "no@e-mail.provided"
   sprintf(
-    '  <author%s>\n    <firstname>%s</firstname>\n    <lastname>%s</lastname>\n    <email>%s</email>\n  </author>',
-    attr, tth::tth(given, mode = "hex"), tth::tth(family, mode = "hex"), email
+    '  <author%s>\n    <firstname>%s</firstname>\n    <middlename>%s</middlename>\n    <lastname>%s</lastname>\n    <email>%s</email>\n  </author>',
+    attr, tth::tth(first, mode = "hex"), middle, tth::tth(family, mode = "hex"), email
   )
 }
 
@@ -70,11 +84,13 @@ ojs_head <- function(key, doi, title) {
     sprintf('<article locale="en_US" public_id="%s" language="en">', key),
     '',
     sprintf('  <id type="doi">%s</id>', doi),
-    sprintf('  <title locale="en_US">%s</title>', title)
+    sprintf('  <title locale="en_US">%s</title>', htmlify(title))
   )
 }
 
-ojs_abstract <- function(file) {
+ojs_abstract <- function(file, type) {
+  if(type %in% c("bookreview", "softwarereview")) return('  <abstract locale="en_US"></abstract>')
+
   ## ensure a non-C locale
   if(identical(Sys.getlocale(), "C")) {
     Sys.setlocale("LC_ALL", "en_US.UTF-8")

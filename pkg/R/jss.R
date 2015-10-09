@@ -114,7 +114,7 @@ jss <- function(dir = ".")
     sapply(strsplit(x, "_", fixed = TRUE), "[", 1L)
   }
 
-  get_email <- function(x) {
+  get_email <- function(x, type = "article") {
     ## convenience function for collapsing authors
     clps <- function(x) {
       x <- gsub(" ", "", x, fixed = TRUE)
@@ -123,7 +123,7 @@ jss <- function(dir = ".")
       tolower(strsplit(x, ",")[[1L]])    
     }
     ## extract list of authors names (collapsed)
-    au <- clps(extract_cmd(x, "\\Plainauthor"))
+    au <- clps(get_author(x, type))
 
     ## extract address parts
     em <- grep("\\Address", x, fixed = TRUE)
@@ -191,7 +191,7 @@ jss <- function(dir = ".")
   ttit <- strip_title(tit)
   ptit <- gsub("{", "", gsub("}", "", ttit, fixed = TRUE), fixed = TRUE)
   pers <- as.person(auth)
-  pers$email <- get_email(x)
+  pers$email <- get_email(x, type = type)
   kwd <- extract_cmd(x, "\\Plainkeywords")
   if(kwd == "") kwd <- extract_cmd(x, "\\Keywords")
 
@@ -298,7 +298,7 @@ format_jss_to_citation <- function(x, package = NULL)
     paste0('  paste("', paste0(format(x$person, include = c('given', 'family')), collapse = ', '), ' (', x$year, ').",'),
     paste0('        "', x$plaintitle, '.",'),
     paste0('        "Journal of Statistical Software, ', x$volume, '(', x$number, '), 1-', x$pages, '.",'),
-    paste0('        "doi:', x$doi, '.")'),
+    paste0('        "doi:', x$doi, '")'),
     ')',
     ''
   )

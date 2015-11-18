@@ -1,4 +1,4 @@
-format_jss_to_ojs <- function(x)
+format_jss_to_ojs <- function(x, article_id = NULL)
 {
   ## supplemental files
   if(x$type %in% c("bookreview", "softwarereview")) {
@@ -21,7 +21,7 @@ format_jss_to_ojs <- function(x)
     }
   }
 
-  c(ojs_head(x$key[1L], x$doi, x$textitle),
+  c(ojs_head(x$key[1L], x$doi, x$textitle, article_id),
     ojs_abstract(file.path(x$directory, x$pdf), x$type),
     ojs_indexing(x$keywords),
     '',
@@ -30,6 +30,7 @@ format_jss_to_ojs <- function(x)
 
     '',
     sprintf('  <pages>1 - %s</pages>', x$pages),
+    sprintf('  <date_submitted>%s</date_submitted>', x$submitdate),
     sprintf('  <date_published>%s</date_published>', Sys.Date()),
 
     ojs_permissions(x$person),
@@ -78,10 +79,11 @@ ojs_permissions <- function(person) {
 }
 
 
-ojs_head <- function(key, doi, title) {
+ojs_head <- function(key, doi, title, article_id) {
+  article_id <- if(is.null(article_id)) "" else sprintf('article_id="%s" ', article_id)
   c('<?xml version="1.0" encoding="UTF-8"?>',
     '<!DOCTYPE article PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.6/native.dtd">',
-    sprintf('<article locale="en_US" public_id="%s" language="en">', key),
+    sprintf('<article locale="en_US" public_id="%s" %slanguage="en">', key, article_id),
     '',
     sprintf('  <id type="doi">%s</id>', doi),
     sprintf('  <title locale="en_US">%s</title>', htmlify(title))

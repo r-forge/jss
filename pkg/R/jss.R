@@ -217,6 +217,8 @@ jss <- function(dir = ".")
     url = url,
     doi = doi,
     type = type,
+    submitdate = extract_cmd(x, "\\Submitdate"),
+    acceptdate = extract_cmd(x, "\\Acceptdate"),
     directory = dir,
     pdf = paste0(file_path_sans_ext(file_tex0), ".pdf"),
     package = if(type %in% c("b", "s")) NULL else unique(c(get_pkg_from_title(tit), get_pkg_from_rpack(names(file_rpack)))),
@@ -258,7 +260,7 @@ as.character.jss <- function(x, ...) {
 }
 
 format.jss <- function(x, style = "BibTeX", ...) {
-  do.call(paste0("format_jss_to_", tolower(style)), list(x))
+  do.call(paste0("format_jss_to_", tolower(style)), list(x, ...))
 }
 
 format_jss_to_bibtex <- function(x, keyprefix = "", keytype = c("author", "number"), doi = TRUE, url = !doi)

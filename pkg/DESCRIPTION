@@ -1,6 +1,6 @@
 Package: jss
-Version: 0.1-1
-Date: 2015-10-04
+Version: 0.1-2
+Date: 2015-11-18
 Title: Journal of Statistical Software Utilities
 Authors@R: c(person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"),
              person(given = "Bettina", family = "Gruen", role = "aut", email = "Bettina.Gruen@jku.at"),

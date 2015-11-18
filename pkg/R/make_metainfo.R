@@ -71,7 +71,7 @@ make_crossref <- function(x = ".", ..., deposit = FALSE) {
 
 make_ojs <- function(x = ".", ...) {
   if(!inherits(x, "jss")) x <- jss(x)  
-  ojs <- format(x, "OJS")
+  ojs <- format(x, "OJS", ...)
   if(!is.null(ojs)) writeLines(ojs, file.path(x$directory, "OJS.xml"))
   invisible(ojs)
 }

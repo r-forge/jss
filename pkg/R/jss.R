@@ -341,8 +341,8 @@ format_jss_to_readme <- function(x)
     "Source code and replication materials for",
     paste("  ", paste0(format(x$person, include = c('given', 'family')), collapse = ', '), sep = ""),
     paste("  ", x$plaintitle, sep = ""),
-    sprintf("  Journal of Statistical Software, %s(%s), %s %s",
-      x$volume, x$number, x$month, x$year),
+    sprintf("  %s, %s(%s), %s %s",
+      x$journal, x$volume, x$number, x$month, x$year),
     "",
     if(length(file) > 0L) c(paste0(format(paste0(fil, ": ")), descr), "") else NULL
   )

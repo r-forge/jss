@@ -203,9 +203,21 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
   }
   
   ## query CrossRef through rcrossref
-  y <- as.data.frame(rcrossref::cr_works(query = qry, limit = 1L)$data)
+  i <- 0
+  ok <- FALSE
+  while(i < 5 & !ok) {
+    i <- i + 1
+    y <- try(rcrossref::cr_works(query = qry, limit = 1L)$data, silent = TRUE)
+    if(inherits(y, "try-error")) {
+      Sys.sleep(5)
+    } else {
+      ok <- TRUE
+    }
+  }
+  if(!ok) return("")
 
   ## use the result only if score > minscore (1.5 is very ad hoc)
+  y <- as.data.frame(y)
   ok <- y$score > minscore
   if(!is.null(type)) ok <- ok & (type == y$type)
   if(ok) return(y$DOI) else return("")

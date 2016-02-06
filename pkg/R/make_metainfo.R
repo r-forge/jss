@@ -23,7 +23,7 @@ make_metainfo <- function(x = ".", ...) {
   for(i in dir(x$directory, pattern = "\\.pdf$")  ) compactPDF(i)
   make_citation(x)
   make_readme(x)
-  make_crossref(x, deposit = FALSE)
+  #make_crossref(x, deposit = FALSE)
   invisible(x)
 }
 

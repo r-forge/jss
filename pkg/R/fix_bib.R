@@ -129,7 +129,7 @@ fix_bib_person <- function(x) {
       giv <- gsub("\\` ", "\\`", giv, fixed = TRUE)
       giv <- gsub("\\~ ", "\\~", giv, fixed = TRUE)
       giv <- gsub("{\\c ", "\\c{", giv, fixed = TRUE)
-      giv <- strsplit(giv, " ", fixed = TRUE)[[1L]]
+      giv <- strsplit(paste(giv, collapse = " "), " ", fixed = TRUE)[[1L]]
     }
     x[i] <- person(given = giv, family = fix_bib_tabspace(x[i]$family))
   }

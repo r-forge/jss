@@ -128,6 +128,7 @@ jss <- function(dir = ".")
     ## extract address parts
     em <- grep("\\Address", x, fixed = TRUE)
     em <- x[(em + 1L):(min(grep("^\\}", x)[grep("^}", x) > em]) - 1L)]
+    em <- gsub("[[:space:]]+$", "", em)
     em <- split(em, cumsum(em == "") + 1)
 
     ## extract e-mail addresses

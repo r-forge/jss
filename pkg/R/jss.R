@@ -92,6 +92,7 @@ jss <- function(dir = ".")
     x <- gsub("\\\\proglang", "", x)
     x <- gsub("\\\\pkg", "", x)
     x <- gsub("\\\\code", "", x)
+    x <- gsub("\\\\texttt", "", x)
     return(x)
   }
   

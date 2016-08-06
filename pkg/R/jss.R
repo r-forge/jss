@@ -301,7 +301,7 @@ format_jss_to_citation <- function(x, package = NULL)
     '  textVersion  =',
     paste0('  paste("', paste0(format(x$person, include = c('given', 'family')), collapse = ', '), ' (', x$year, ').",'),
     paste0('        "', x$plaintitle, '.",'),
-    paste0('        "Journal of Statistical Software, ', x$volume, '(', x$number, '), 1-', x$pages, '.",'),
+    paste0('        "', x$journal, ', ', x$volume, '(', x$number, '), 1-', x$pages, '.",'),
     paste0('        "doi:', x$doi, '")'),
     ')',
     ''

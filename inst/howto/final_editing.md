@@ -1,5 +1,5 @@
 <!--- Render this file by running 
-pandoc todos_jss_cleanup.md -f markdown -t html -s -o todos_jss_cleanup.html 
+pandoc final_editing.md -f markdown -t html -s -o final_editing.html 
 -->
 
 # JSS cleanup

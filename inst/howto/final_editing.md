@@ -23,7 +23,10 @@ install.packages(c("base64enc", "bibtex", "formatR", "rcrossref", "tm", "tth"))
 install.packages("jss", repos = "http://R-Forge.R-project.org")
 ~~~
 
-
+To make rendering the PDF smooth, it is useful to store jsslogo.jpg and jss.cls
+in `/texmf/tex/latex/jss` and jss.bst in `/texmf/bibtex/bst/jss`.  You get
+these files from [this
+link](https://www.jstatsoft.org/public/journals/1/jss-style.zip).
 
 -------------------------------------
 
@@ -128,7 +131,8 @@ website and if needed set up citation as follows:
 
 - Run `aspell check --lang=en_US --mode=tex paper.tex`
 
-- Further clean up according to https://www.jstatsoft.org/about/submissions
+- Further clean up according to the guide on the
+  [website](https://www.jstatsoft.org/about/submissions).
 
 
 

@@ -14,13 +14,14 @@ utility for counting lines after removing comments and empty lines.
 \usage{
 fix_rscript(file = NULL)
 
-code_lines(path = ".")
+code_lines(path = ".", comment = "#")
 }
 
 \arguments{
   \item{file}{character. The .R script that should be fixed,
     by default \code{Sys.glob("*.R")} is used.}
   \item{path}{character specifying a directory with .R files.}
+  \item{comment}{character for beginning comments.}
 }
 
 \seealso{

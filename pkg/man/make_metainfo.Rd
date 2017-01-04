@@ -18,7 +18,7 @@ objects into text files.
 make_metainfo(x = ".", \dots)
 make_citation(x = ".", \dots)
 make_readme(x = ".", \dots)
-make_crossref(x = ".", \dots)
+make_crossref(x = ".", \dots, deposit = FALSE)
 make_ojs(x = ".", \dots)
 make_ojs3(x = ".", \dots)
 }
@@ -27,6 +27,7 @@ make_ojs3(x = ".", \dots)
   \item{x}{an object of class \code{\link[jss]{jss}} or a character
     specifying the \code{dir} to be passed to \code{jss}.}
   \item{\dots}{arguments passed to \code{\link[jss]{format.jss}}.}
+  \item{deposit}{logical. Should the metainformation be deposited with Crossref?}
 }
 
 \details{

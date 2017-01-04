@@ -8,6 +8,7 @@ export(
   "make_readme",
   "make_crossref",
   "make_ojs",
+  "make_ojs3",
 
   "make_jss_bst",
   "make_jss_cls",

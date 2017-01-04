@@ -75,3 +75,10 @@ make_ojs <- function(x = ".", ...) {
   if(!is.null(ojs)) writeLines(ojs, file.path(x$directory, "OJS.xml"))
   invisible(ojs)
 }
+
+make_ojs3 <- function(x = ".", ...) {
+  if(!inherits(x, "jss")) x <- jss(x)  
+  ojs <- format(x, "OJS3", ...)
+  if(!is.null(ojs)) writeLines(ojs, file.path(x$directory, "OJS.xml"))
+  invisible(ojs)
+}

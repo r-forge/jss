@@ -4,6 +4,7 @@
 \alias{make_readme}
 \alias{make_crossref}
 \alias{make_ojs}
+\alias{make_ojs3}
 \alias{make_jss_bib}
 
 \title{Generate Files with Metainformation for JSS Publications}
@@ -19,6 +20,7 @@ make_citation(x = ".", \dots)
 make_readme(x = ".", \dots)
 make_crossref(x = ".", \dots)
 make_ojs(x = ".", \dots)
+make_ojs3(x = ".", \dots)
 }
 
 \arguments{
@@ -34,8 +36,8 @@ make_ojs(x = ".", \dots)
 the manuscript LaTeX files.
 \code{make_crossref} generates a \code{CROSSREF.xml} file for registering DOIs
 with CrossRef.
-\code{make_ojs} generates a \code{OJS.xml} file for importing a new submission
-into OJS.
+\code{make_ojs} and \code{make_ojs3} generate \code{OJS.xml} files for importing a new submission
+into OJS (version2) and OJS3, respectively.
 }
 
 \seealso{

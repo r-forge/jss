@@ -11,7 +11,7 @@ make_jss_bib <- function(dir = "/home/zeileis/Work/JSS/Publications", file = "js
   if(is.null(file) || identical(file, FALSE)) {
     return(rval)
   } else {
-    writeLines(rbind(rval, ""), "jss.bib")
+    writeLines(rbind(rval, ""), file)
     invisible(rval)
   }
 }

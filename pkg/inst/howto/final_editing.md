@@ -108,6 +108,16 @@ R> foo(prompt = "R> ", attention = "include spaces in code",
 - When writing code, fill lines and use " instead of '. Make sure that spaces
   are entered after commas, e.g. `plot(x, y)` instead of `plot(x,y)`.
 
+- Run `aspell check --lang=en_US --mode=tex paper.tex`
+
+- Further clean up according to the guide on the
+  [website](https://www.jstatsoft.org/about/submissions).
+
+
+
+-------------------------------------
+
+## Bibliography
     
 - Check if all Software used is cited. If not, add `\cite`/`\citep` in
   manuscript and add respective bib-item in bib-file. For R-packages
@@ -126,19 +136,6 @@ website and if needed set up citation as follows:
   url = {https://CRAN.R-project.org/package=pkgname},
 } 
 ~~~
-
-
-
-- Run `aspell check --lang=en_US --mode=tex paper.tex`
-
-- Further clean up according to the guide on the
-  [website](https://www.jstatsoft.org/about/submissions).
-
-
-
--------------------------------------
-
-## Bibliography
 
 - To clean the bib-file make sure you have bibtool installed and are connected
   to the internet and then run in R

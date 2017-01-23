@@ -58,13 +58,6 @@ link](https://www.jstatsoft.org/public/journals/1/jss-style.zip).
 
 - Change bibliography name to ref.bib
 
-- Proper names should start with capital letters in text (e.g. Poisson), but
-words like "mixed logit" should be lower case.
-
-- Abbreviations should usually have capital letters (e.g. "PDF").
-
-- `\emph` instead of `\textbf` for emphasizing
-
 - In math formulas, use `\top` for transposing, `\dots` or `\ldots` for ...,
   and instert spaces after commas (e.g. "0, 1" instead of "0,1").
 
@@ -108,10 +101,17 @@ R> foo(prompt = "R> ", attention = "include spaces in code",
 - When writing code, fill lines and use " instead of '. Make sure that spaces
   are entered after commas, e.g. `plot(x, y)` instead of `plot(x,y)`.
 
-- Run `aspell check --lang=en_US --mode=tex paper.tex`
+- Proper names should start with capital letters in text (e.g. Poisson), but
+words like "mixed logit" should be lower case.
+
+- Abbreviations should usually have capital letters (e.g. "PDF").
+
+- `\emph` instead of `\textbf` for emphasizing
 
 - Further clean up according to the guide on the
   [website](https://www.jstatsoft.org/about/submissions).
+
+- Run `aspell check --lang=en_US --mode=tex paper.tex`
 
 
 

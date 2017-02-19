@@ -1,4 +1,4 @@
-bibtool <- function(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
+bibtool <- function(tex = NULL, orig = "_orig.bib")
 {
   ## use supplied/available .tex file and call pdflatex
   if(is.null(tex)) {
@@ -14,19 +14,25 @@ bibtool <- function(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
   texbase <- tools::file_path_sans_ext(tex)  
   aux <- paste0(texbase, ".aux")
   aux <- readLines(aux)
-  aux <- aux[substr(aux, 2L, 8L) == "bibdata"]
-  bibbase <- substr(aux, 10L, nchar(aux) - 1L)
-  bib <- paste(bibbase, "bib", sep = ".")
-  stopifnot(file.exists(bib))
-  system(paste("bibtool -x", texbase, ">", temp))
+
+  cit <- aux[substr(aux, 2L, 9L) == "citation"]
+  cit <- unique(substr(cit, 11L, nchar(cit) - 1L))
+
+  bibfile <- aux[substr(aux, 2L, 8L) == "bibdata"]
+  bibfile <- paste(substr(bibfile, 10L, nchar(bibfile) - 1L), "bib", sep = ".")
+  stopifnot(file.exists(bibfile))
+
+  bib <- bibtex::read.bib(bibfile)
+  file.rename(bibfile, orig)
+  
+  bib <- bib[tolower(bib$key) %in% tolower(cit)]
+  bibtex::write.bib(bib, bibfile)
 
   ## clean up temporary LaTeX files and rename .bib
   suppressWarnings(file.remove(paste0(texbase, ".", c(
     "aux", "bbl", "blg", "cp", "cps", "dvi", "fdx", "fn", "fns",
     "lof", "log", "ky", "kys", "nav", "out", "pg", "pgs", "snm",
     "toc", "tp", "vdx", "vr", "vrb", "vrs", "tpt"))))
-  file.rename(bib, orig)
-  file.rename(temp, bib)
 }
 
 shortcites <- function(x, maxlength = 6) {

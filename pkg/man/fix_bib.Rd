@@ -15,7 +15,7 @@ especially for publications in the Journal of Statistical Software.
 \usage{
 fix_bib(x, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
 
-bibtool(tex = NULL, temp = "_foo.bib", orig = "_orig.bib")
+bibtool(tex = NULL, orig = "_orig.bib")
 
 shortcites(x, maxlength = 6)
 

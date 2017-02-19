@@ -16,7 +16,9 @@ bibtool <- function(tex = NULL, orig = "_orig.bib")
   aux <- readLines(aux)
 
   cit <- aux[substr(aux, 2L, 9L) == "citation"]
-  cit <- unique(substr(cit, 11L, nchar(cit) - 1L))
+  cit <- substr(cit, 11L, nchar(cit) - 1L)
+  cit <- strsplit(cit, ",", fixed = TRUE)
+  cit <- unique(unlist(cit))
 
   bibfile <- aux[substr(aux, 2L, 8L) == "bibdata"]
   bibfile <- paste(substr(bibfile, 10L, nchar(bibfile) - 1L), "bib", sep = ".")

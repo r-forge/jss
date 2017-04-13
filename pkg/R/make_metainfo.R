@@ -41,7 +41,7 @@ make_readme <- function(x = ".", ...) {
   invisible(rd)
 }
 
-make_crossref <- function(x = ".", ..., deposit = FALSE) {
+make_crossref <- function(x = ".", ..., deposit = TRUE) {
   ## JSS info
   x <- if(inherits(x, "jss")) list(x) else lapply(x, jss)
 
@@ -55,10 +55,19 @@ make_crossref <- function(x = ".", ..., deposit = FALSE) {
   ## at the moment: just create file
   writeLines(x, file)
 
+  if(deposit) {
+    lp <- try(readLines(file.path(Sys.getenv("HOME"), ".crossref")))
+    if(inherits(lp, "try-error") || length(lp) != 2L) deposit <- FALSE
+  }
+  if(!deposit) {
+    lp <- c("<id>", "<passwd>")
+  }
+
   ## test via http://test.crossref.org (see http://help.crossref.org/verifying_your_xml)
   ## make real deposits with https://doi.crossref.org/servlet/deposit
-  ## curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://test.crossref.org/servlet/deposit
-  cmd <- "curl -F 'operation=doMDUpload' -F 'login_id=fast' -F 'login_passwd=fast_827' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit"
+  ## curl -F 'operation=doMDUpload' -F 'login_id=<id>' -F 'login_passwd=<passwd>' -F 'fname=@CROSSREF.xml' https://test.crossref.org/servlet/deposit
+  cmd <- sprintf("curl -F 'operation=doMDUpload' -F 'login_id=%s' -F 'login_passwd=%s' -F 'fname=@CROSSREF.xml' https://doi.crossref.org/servlet/deposit",
+    lp[1L], lp[2L])
   if(deposit) {
     system(cmd)
     file.remove("CROSSREF.xml")

@@ -141,7 +141,7 @@ toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower
             else paste0(toupper(x1), tolower(substring(x, 2L)))
         }
 	
-        xx <- .Call(tools:::splitString, x, ' -/"()') ## for JSS testing with tools:::	
+        xx <- .Call(tools:::C_splitString, x, ' -/"()') ## for JSS testing with tools:::	
 	## RSplitString <- function(s) {
         ##   chars <- unlist(strsplit(s, NULL))
         ##   ind <- chars %in% unlist(strsplit(" -/\"()", NULL))

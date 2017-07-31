@@ -71,7 +71,7 @@ jss <- function(dir = ".")
     if(length(x) > 3) x <- x[1:3]
     x <- paste(sapply(strsplit(x, " "), tail, 1), collapse = "+")
     if(!is.null(year)) x <- paste(x, ":", year, sep = "")
-    for(chr in c("{", "}", "\\", "\"", "'", "^", "`")) x <- gsub(chr, "", x, fixed = TRUE)
+    for(chr in c("{", "}", "\\", "\"", "'", "^", "`", "~", "-")) x <- gsub(chr, "", x, fixed = TRUE)
     return(x)
   }
   

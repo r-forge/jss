@@ -129,10 +129,10 @@ website and if needed set up citation as follows:
 
 ~~~
 @Manual{,
-  title = {{pkgname}: Package Title or Description},
+  title = {\pkg{pkgname}: Package Title or Description},
   author = {First Author and Second Author},
   year = {2000},
-  note = {R package version 1.2-3},
+  note = {\proglang{R}~package version~1.2-3},
   url = {https://CRAN.R-project.org/package=pkgname},
 } 
 ~~~

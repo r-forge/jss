@@ -6,7 +6,6 @@ pandoc final_editing.md -f markdown -t html -s -o final_editing.html
 
 
 ## General
-
 For the following you will need the R-package `jss` and some suggested packages.  
 **Installation**:
 
@@ -40,6 +39,20 @@ link](https://www.jstatsoft.org/public/journals/1/jss-style.zip).
 
 - Code/ contains file code.R (or, if package on CRAN older version than
   .tar.gz, save .tar.gz)
+
+- paper.tex and ref.bib should be ASCII, to check this, use
+
+~~~
+file ref.bib
+file paper.tex
+~~~
+
+if it does not say that the file is ASCII text, you can find
+problematic lines in R:
+
+~~~
+tools::showNonASCII(readLines("ref.bib")) 
+~~~
 
 - After steps below are finished, zip base folder
 
@@ -154,6 +167,12 @@ original, but the last ref.bib created.
 -------------------------------------
 
 ## Code
+
+- Tor run R code run
+
+~~~
+Rscript -e "library('knitr'); stitch('code.R')"
+~~~
 
 - To clean R code run
 

@@ -141,7 +141,7 @@ ojs3_abstract <- function(file, type) {
   }
 
   ## use tm to read PDF
-  x <- as.character(tm::Corpus(tm::URISource(file), readerControl = list(reader = tm::readPDF))[[1L]])
+  x <- as.character(tm::Corpus(tm::URISource(file), readerControl = list(reader = tm::readPDF(engine = "xpdf")))[[1L]])
 
   ## extract abstract
   st <- which(x == "Abstract")[1L] + 1L

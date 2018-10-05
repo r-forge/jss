@@ -228,7 +228,7 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
   y <- as.data.frame(y)
   ok <- y$score > minscore
   if(!is.null(type)) ok <- ok & (type == y$type)
-  if(ok) return(y$DOI) else return("")
+  if(ok) return(y$doi) else return("")
 }
 
 add_doi <- function(x, file = "out.bib", minscore = 1.5) {

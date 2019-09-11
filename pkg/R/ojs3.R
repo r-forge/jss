@@ -1,4 +1,4 @@
-format_jss_to_ojs3 <- function(x, article_id = NULL) {
+format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="internal" advice="update">%s</id> article_id
   supplementary_files <- NULL
   supplementary_galleys <- NULL
   if(! x$type %in% c("bookreview", "softwarereview")) {
@@ -171,7 +171,7 @@ ojs3_file <- function(file, dir, id, genre, filetype) {
                  'xsi:schemaLocation="http://pkp.sfu.ca native.xsd"'
                  )
   rev_attr <- c('number="1"',
-                #FIXME# sprintf('genre="%s"',genre),
+                sprintf('genre="%s"',genre),
                 sprintf('filename="%s"',file),
                 sprintf('filetype="%s"',filetype),
                 #FIXME# 'filesize="1"', # was needed in OJS 3.0
@@ -187,12 +187,12 @@ ojs3_file <- function(file, dir, id, genre, filetype) {
 }
 
 ojs3_manuscript <- function(file, dir, id) {
-  ojs3_file(file,dir,id,"Manuscript (compiled)", "application/pdf") ## FIXME: Unknown genre Manuscript (compiled)
+  ojs3_file(file,dir,id,"Manuscript (PDF)", "application/pdf")
 }
 
 ojs3_supplemental_file <- function(file, dir, id, description) {
   # TODO: parse filename and description to find out genre and mimetype
-  genre <- "Other"
+  genre <- "Other" #FIXME# Software / Replication Material / Other
   filetype <- "n/a"
   ojs3_file(file,dir,id,genre,filetype)
 }

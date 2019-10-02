@@ -110,7 +110,7 @@ function(x)
 }
 
 ## JSS: from tools, export arguments alone/lower/either/tolower
-toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower = tolower)
+toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower = base::tolower)
 {
     ## leave these alone: the internal caps rule would do that
     ## in some cases.  We could insist on this exact capitalization.

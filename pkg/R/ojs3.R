@@ -23,11 +23,11 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="interna
   title <- htmlify(x$textitle)
   pages <- sprintf('1 - %s', x$pages)
   abstract <- ojs3_abstract(file.path(x$directory, x$pdf), x$type)
-
+  
   authors <- ojs3_author_list(x$person)
   authors_attr <- c('xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
                     'xsi:schemaLocation="http://pkp.sfu.ca native.xsd"'
-                    )
+                    )   
 
   article <- c (xml_wrap('id', article_id, 'type="internal" advice="update"'),
                 xml_wrap('id', x$key["number"], 'type="public" advice="update"'),
@@ -42,11 +42,13 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="interna
                 supplementary_galleys,
                 # TODO: Permissions. Currently not possible?
                 # ojs3_permissions(x$person),
+                ojs3_issue(x$year, x$volume),
                 xml_wrap('pages',pages)
                 )
 
   date_submitted <- sprintf('date_submitted="%s"',x$submitdate)
-
+  dtae_published <- sprintf('date_published="%s"',Sys.Date())
+  
   section <- "ART"
   if (x$type == "bookreview")     section <- "BR"
   if (x$type == "softwarereview") section <- "SR"
@@ -55,9 +57,10 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="interna
   article_attr <- c('xmlns="http://pkp.sfu.ca"',
                      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
                      'locale="en_US"',
-                     date_submitted,
+                      date_submitted,
                      'stage="production"',
-                     sprintf('section_ref="%s"', section),
+                      date_published,
+                     sprintf('section_ref="%issue$years"', section),
                      'xsi:schemaLocation="http://pkp.sfu.ca native.xsd"'
                      )
 
@@ -142,6 +145,7 @@ ojs3_abstract <- function(file, type) {
 
   ## extract abstract
   st <- which(x == "Abstract")[1L] + 1L
+  
   en <- which(substr(x, 1L, 9L) == "Keywords:") - 1L
   while(x[st] == "") st <- st + 1L
   while(x[en] == "") en <- en - 1L
@@ -206,3 +210,9 @@ ojs3_galley <- function(name, file_id){
   xml_wrap_list('article_galley', galley, galley_attr)
 }
 
+ojs3_issue <- function(year, volume){
+  entries <- c(xml_wrap('volume', volume),
+               xml_wrap('year', year))
+  xml_wrap_list('issue_identification', entries)
+  
+}

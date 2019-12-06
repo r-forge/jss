@@ -36,8 +36,6 @@ add_doi(x, file = "out.bib", minscore = 1.5)
   \item{shortcites}{logical. Should bibentries with a long author list
     be reported in a shortcites statement?}
   \item{tex}{character specifying the input LaTeX file.}
-  \item{temp}{character with file name for the temporary copy
-    of the BibTeX file (while running \code{bibtool}).}
   \item{maxlength}{numeric. Maximum number of authors for a
     normal cite (that does not have to be shortened).}
   \item{minscore}{numeric. Minimum score that needs to be achieved

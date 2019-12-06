@@ -1,4 +1,4 @@
-format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="internal" advice="update">%s</id> article_id
+format_jss_to_ojs3 <- function(x, article_id = NULL) {
   supplementary_files <- NULL
   supplementary_galleys <- NULL
   if(! x$type %in% c("bookreview", "softwarereview")) {
@@ -40,14 +40,14 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="interna
                 supplementary_files,
                 ojs3_galley("PDF",1),
                 supplementary_galleys,
-                # TODO: Permissions. Currently not possible?
+                # FIXME: Permissions. Currently not possible?
                 # ojs3_permissions(x$person),
                 ojs3_issue(x$year, x$volume),
                 xml_wrap('pages',pages)
                 )
 
   date_submitted <- sprintf('date_submitted="%s"',x$submitdate)
-  dtae_published <- sprintf('date_published="%s"',Sys.Date())
+  date_published <- sprintf('date_published="%s"',Sys.Date())
   
   section <- "ART"
   if (x$type == "bookreview")     section <- "BR"
@@ -60,7 +60,7 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) { #FIXME# <id type="interna
                       date_submitted,
                      'stage="production"',
                       date_published,
-                     sprintf('section_ref="%issue$years"', section),
+                     sprintf('section_ref="%s"', section),
                      'xsi:schemaLocation="http://pkp.sfu.ca native.xsd"'
                      )
 
@@ -104,7 +104,8 @@ ojs3_author_list <- function(person) {
   given <- sapply(listify(person$given), paste, collapse = " ")
   family <- sapply(listify(person$family), paste, collapse = " ")
   email <- sapply(listify(person$email), paste, collapse = " ")
-  attr[which(email != "")[1L]] <- ' include_in_browse="true" primary_contact="true"' ## FIXME: user_group_ref="Author" 
+  primary <- which(email != "")[1L]
+  attr[primary] <- paste(attr[primary], 'primary_contact="true"')
   email[email == ""] <- "no@e-mail.provided"
 
   given <- tth::tth(given, mode = "hex")
@@ -123,7 +124,7 @@ ojs3_author_list <- function(person) {
 }
 
 ojs3_permissions <- function(person) {
-  # OJS2 Style permissions field
+  # OJS2 Style permissions field #FIXME# adapt to OJS3
   person <- paste(format(person, include = c("given", "family")), collapse = ", ")
   person <- tth::tth(person, mode = "hex")
   perm <- c(xml_wrap_locale('copyright_holder', person),
@@ -166,7 +167,7 @@ ojs3_abstract <- function(file, type) {
   x
 }
 
-ojs3_file <- function(file, dir, id, genre, filetype) {
+ojs3_file <- function(file, dir, id, genre, filetype, uploader = NULL) {
   file_attr <- c('xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
                  'stage="final"',
                  sprintf('id="%d"',id),
@@ -176,8 +177,7 @@ ojs3_file <- function(file, dir, id, genre, filetype) {
                 sprintf('genre="%s"',genre),
                 sprintf('filename="%s"',file),
                 sprintf('filetype="%s"',filetype),
-                #FIXME# 'user_group_ref="Author"',
-                'uploader="zeileis"', # TODO: OJS username required
+                if(!is.null(uploader)) sprintf('uploader="%s"', uploader),
                 'viewable="false"'
                 )
   data <-  base64enc::base64encode(file.path(dir, file))
@@ -192,10 +192,10 @@ ojs3_manuscript <- function(file, dir, id) {
 }
 
 ojs3_supplemental_file <- function(file, dir, id, description) {
-  # TODO: parse filename and description to find out genre and mimetype
+  # FIXME: parse filename and description to find out genre and mimetype
   genre <- "Other" #FIXME# Software / Replication Material / Other
   filetype <- "n/a"
-  ojs3_file(file,dir,id,genre,filetype)
+  ojs3_file(file, dir, id, genre, filetype)
 }
 
 ojs3_galley <- function(name, file_id){

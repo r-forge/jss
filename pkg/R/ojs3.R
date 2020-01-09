@@ -9,7 +9,7 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) {
       if(any(supp[-(1L:5L)] == "")) nsupp <- min(which(supp[-(1L:5L)] == "")) - 1L
     } else {
       nsupp <- 0L
-    }
+    } 
     if(nsupp > 0L) {
       supp <- strsplit(supp[6L:(5L + nsupp)], "\\:[[:space:]]+")
       id <- 2:(1+nsupp)
@@ -34,14 +34,14 @@ format_jss_to_ojs3 <- function(x, article_id = NULL) {
                 xml_wrap('id', x$doi, 'type="doi" advice="update"'),
                 xml_wrap_locale('title', title),
                 xml_wrap_locale('abstract', abstract),
+                ojs3_copyright(x$person),
+                xml_wrap('copyrightYear', format(Sys.Date(), "%Y")),
                 ojs3_keywords(x$keywords),
                 xml_wrap_list('authors',authors,authors_attr),
                 ojs3_manuscript(x$pdf,x$directory,1),
                 supplementary_files,
                 ojs3_galley("PDF",1),
                 supplementary_galleys,
-                # FIXME: Permissions. Currently not possible?
-                # ojs3_permissions(x$person),
                 ojs3_issue(x$year, x$volume),
                 xml_wrap('pages',pages)
                 )
@@ -123,15 +123,12 @@ ojs3_author_list <- function(person) {
   unlist(authors)
 }
 
-ojs3_permissions <- function(person) {
-  # OJS2 Style permissions field #FIXME# adapt to OJS3
+ojs3_copyright <- function(person){
   person <- paste(format(person, include = c("given", "family")), collapse = ", ")
   person <- tth::tth(person, mode = "hex")
-  perm <- c(xml_wrap_locale('copyright_holder', person),
-            xml_wrap('copyright_year',  format(Sys.Date(), "%Y"))
-            )
-  xml_wrap_list('permissions', perm)
+  xml_wrap_locale('copyrightHolder', person)
 }
+
 
 ojs3_abstract <- function(file, type) {
   if(type %in% c("bookreview", "softwarereview")) return('  <abstract locale="en_US"></abstract>')
@@ -192,10 +189,26 @@ ojs3_manuscript <- function(file, dir, id) {
 }
 
 ojs3_supplemental_file <- function(file, dir, id, description) {
-  # FIXME: parse filename and description to find out genre and mimetype
-  genre <- "Other" #FIXME# Software / Replication Material / Other
+  # FIXME: parse filename and descripion to find out filetype
+  genre <- ojs3_genre(description)
   filetype <- "n/a"
   ojs3_file(file, dir, id, genre, filetype)
+}
+
+ojs3_genre <- function(description){
+  if(grepl("replication",description)){return("Replication Material")}
+  if(grepl("source", description)){return("Software")}
+  return("Other")
+}
+
+ojs3_filetype <- function(file){
+  # package mime needed:
+  return(guess_type(file, mime_extra = NULL, unknown =  "n/a"))
+  # without mime: 
+  # if(file_ext(file)=="py"){return("text/x-python")}
+  # if(file_ext(file)=="c"){return("text/x-csrc")}
+  # if(file_ext(file)=="csv"){return("text/comma-separated-values")}
+  # else{return("n/a")}
 }
 
 ojs3_galley <- function(name, file_id){

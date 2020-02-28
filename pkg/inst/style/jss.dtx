@@ -62,7 +62,7 @@
 %   {include DOI, list FOAS as publisher}
 %
 % \changes{ng}{2018/mm/dd}
-%   {changed DOI resolver from dx.doi.org to doi.org}
+%   {changed DOI resolver from dx.doi.org to doi.org, assure fontseries b in pkg}
 %
 %
 %
@@ -735,7 +735,7 @@
 %<*driver>
 \documentclass[a4paper]{ltxdoc}
 \providecommand{\file}[1]{\texttt{#1}}
-\providecommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\providecommand{\pkg}[1]{{\fontseries{m}\fontseries{b}\selectfont #1}}
 \usepackage{color,hyperref}
 \oddsidemargin1.2cm
 \textwidth14.2cm

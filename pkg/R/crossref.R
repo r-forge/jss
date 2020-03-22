@@ -13,7 +13,7 @@ format_jss_to_crossref <- function(x) {
 htmlify <- function(x, collapse = " ") {   
   ## replace JSS markup by generic LaTeX
   tab <- rbind(
-    c("\\proglang", "\\textsf"),
+    c("\\proglang", "\\textit"),
     c("\\pkg", "\\textbf"),
     c("\\code", "\\texttt"),
     c("\\bm", "")

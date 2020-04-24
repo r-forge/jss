@@ -169,10 +169,17 @@ fix_bib_journal <- function(x) {
   if(is.null(x)) return(x)
   stopifnot(is.character(x))
   x <- fix_bib_tabspace(x)
+  x <- toTitleCase(x, tolower = identity, alone = "", either = "",
+    lower = readLines(system.file("case", "lower.txt", package = "jss")))
   if(is.character(x)) {
     if(x == "American Statistician") return("The American Statistician")
+    if(x == "Annals of Applied Statistics") return("The Annals of Applied Statistics")
+    if(x == "Annals of Probability") return("The Annals of Probability")
     if(x == "Annals of Statistics") return("The Annals of Statistics")
     if(x == "Computational Statistics and Data Analysis") return("Computational Statistics \\& Data Analysis")
+    if(tolower(x) == "plos one") return("PLOS One")
+    if(tolower(x) == tolower("Proceedings of the National Academy of Sciences"))
+        return("Proceedings of the National Academy of Sciences of the United States of America")
     if(length(grep("Journal of the Royal Statistical Society", x))) {
       y <- gsub("Journal of the Royal Statistical Society", "", x)
       if(gsub(" ", "", y) %in% c("A", "B", "C", "D")) return(x)

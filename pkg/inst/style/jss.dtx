@@ -1,6 +1,6 @@
-\def\fileversion{3.0}
+\def\fileversion{3.1}
 \def\filename{jss}
-\def\filedate{2015/09/01}
+\def\filedate{2020/08/03}
 %
 % \iffalse
 %
@@ -61,13 +61,13 @@
 % \changes{3.0}{2015/09/01}
 %   {include DOI, list FOAS as publisher}
 %
-% \changes{ng}{2018/mm/dd}
+% \changes{3.1}{2020/08/03}
 %   {changed DOI resolver from dx.doi.org to doi.org, assure fontseries b in pkg}
 %
 %
 %
 % \MakeShortVerb{\|}
-% \newcommand{\foopkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+% \newcommand{\foopkg}[1]{{\fontseries{m}\fontseries{b}\selectfont #1}}
 % \newcommand{\enquote}[1]{``#1''}
 %
 % \title{\foopkg{jss}: A Document Class for Publications in the Journal of Statistical Software}
@@ -346,14 +346,14 @@
 % followed by a linebreak and his affiliation (only the university,
 % in a single line), e.g.,
 % \begin{verbatim}
-% \Reviewer{Frederic Udina\\Pompeu Fabra University}
+% \Reviewer{Achim Zeileis\\Universit\"at Innsbruck}
 % \end{verbatim}
 % 
 % \DescribeMacro{\Plainreviewer}
 % The name of the reviewer without affiliation. 
 % It must not contain any markup (bold fonts etc.), e.g.,
 % \begin{verbatim}
-% \Plainauthor{Frederic Udina}
+% \Plainauthor{Achim Zeileis}
 % \end{verbatim}
 % 
 % \emph{The following five commands are just required for book reviews.}
@@ -652,18 +652,19 @@
 % \newblock \emph{Visualizing Categorical Data}.
 % \newblock SAS Insitute, Carey, NC.
 % 
-% {\textsf{R} Development Core Team} (2004).
+% {\textsf{R} Core Team} (2020).
 % \newblock \emph{\textsf{R}: {A} Language and Environment for Statistical
 %   Computing}.
 % \newblock \textsf{R} Foundation for Statistical Computing, Vienna, Austria.
-% \newblock {ISBN} 3-900051-00-3, URL~\url{http://www.R-project.org/}.
+% \newblock URL~\url{https://www.R-project.org/}.
 % 
-% Urbanek S, Theus M (2003).
-% \newblock \enquote{\foopkg{iPlots} -- {H}igh Interaction Graphics for \textsf{R}.}
+% Plummer M (2003).
+% \newblock \enquote{\foopkg{JAGS} -- {A} Program for Analysis of {B}ayesian
+%   Graphical Models Using {G}ibbs Sampling.}
 % \newblock In K~Hornik, F~Leisch, A~Zeileis (eds.), \enquote{Proceedings of the
 %   3rd International Workshop on Distributed Statistical Computing, Vienna,
 %   Austria,} {ISSN 1609-395X},
-%   URL~\url{http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/}.
+%   URL~\url{https://www.R-project.org/conferences/DSC-2003/Proceedings/}.
 % \end{quote}
 %
 % \emph{Important.} Note, that also the titles of papers are in title style
@@ -1393,7 +1394,7 @@
 \def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
 %%\let\code=\texttt
 \let\proglang=\textsf
-\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\newcommand{\pkg}[1]{{\fontseries{m}\fontseries{b}\selectfont #1}}
 %</class>
 %    \end{macrocode}
 % for specifying e-mail addresses,

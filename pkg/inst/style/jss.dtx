@@ -62,7 +62,7 @@
 %   {include DOI, list FOAS as publisher}
 %
 % \changes{3.1}{2020/08/03}
-%   {changed DOI resolver from dx.doi.org to doi.org, assure fontseries b in pkg}
+%   {changed DOI resolver from dx.doi.org to doi.org, assure fontseries b in pkg, include lmodern if available}
 %
 %
 %
@@ -136,11 +136,13 @@
 %
 % By using |jss.cls|, the packages \foopkg{graphicx},
 % \foopkg{color}, \foopkg{hyperref}, \foopkg{ae}, \foopkg{fancyverb} and
-% \foopkg{natbib} are loaded automatically.
-% Authors may, of course, include further packages
-% but should not change the page layout
-% or change the font or font encoding. If the package \foopkg{thumbpdf}
-% is available, its inclusion is encouraged.
+% \foopkg{natbib} are loaded automatically. Additionally, \foopkg{lmodern}
+% and \foopkg{upquote} are loaded if available.
+% Authors may, of course, include further packages if necessary (e.g.,
+% \foopkg{amsmath}, \foopkg{amsfonts}, \foopkg{bm}, \foopkg{tikz}, \dots)
+% but should not do so excessively. In particular, no packages must be loaded
+% that change the page layout, the font, or font encoding.
+% If the package \foopkg{thumbpdf} is available, its inclusion is encouraged.
 %
 % The titles of JSS publications are capitalized, i.e., in title style, but the section
 % headers are not and should be in sentence-style.
@@ -823,6 +825,7 @@
 \RequirePackage{graphicx,color,ae,fancyvrb}
 \RequirePackage[T1]{fontenc}
 \IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\IfFileExists{lmodern.sty}{\RequirePackage{lmodern}}{}
 %</class>
 %    \end{macrocode}
 %

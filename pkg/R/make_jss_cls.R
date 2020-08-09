@@ -45,8 +45,14 @@ make_jss_bst <- function(dir = ".")
 fix_bst_license <- function(bst = "jss.bst") {
   file <- bst
   bst <- readLines(bst)
-  wi <- grep("======", bst, fixed = TRUE)
-  bst[wi[1]:wi[2]] <- c(
+  wi <- c(
+    grep("jstatsoft", bst, fixed = TRUE) - 1L,
+    grep("======", bst, fixed = TRUE)[2L]
+  )
+  bst <- append(bst[-(wi[1L]:wi[2L])], after = wi[1L] - 1L, values = c(
+    "%%",
+    "%% ** BibTeX style file for JSS publications (http://www.jstatsoft.org/)",
+    "%%",
     "%% License: GPL-2 | GPL-3",
     " % ===============================================================",
     " % IMPORTANT NOTICE:",
@@ -57,6 +63,7 @@ fix_bst_license <- function(bst = "jss.bst") {
     " % This generated file can be redistributed and/or modified under the terms",
     " % of the General Public License (Version 2 or 3).",
     " % ===============================================================")
+  )
   writeLines(bst, file)
   invisible(bst)
 }

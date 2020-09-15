@@ -197,13 +197,27 @@ fix_bib_journal <- function(x) {
 }
 
 fix_bib_doi <- function(x) {
-  x <- strsplit(x, "/", fixed = TRUE)
-  x <- t(sapply(x, function(y) if(length(y) >= 2L) tail(y, 2L) else c("", "")))
-  ok <- substr(x[, 1L], 1L, 3L) == "10." & apply(nchar(x) >= 1L, 1L, all)
-  x <- apply(x, 1L, paste, collapse = "/")
+  x <- strsplit(x, "/|//")
+  x <- sapply(x, function(y) {
+    ok <- length(y) >= 2L
+    if(ok && substr(y, 1L, 4L) == "http") {
+      y <- y[-1L]
+      if(length(y) < 2L) ok <- FALSE
+    }
+    if(ok && grepl("doi.org", y[1L], fixed = TRUE)) {
+      y <- y[-1L]
+      if(length(y) < 2L) ok <- FALSE    
+    }
+    if(ok && substr(y[1L], 1L, 3L) != "10.") {
+      ok <- FALSE
+    }
+    if(ok && any(nchar(y) < 1L)) {
+      ok <- FALSE
+    }
+    if(ok) paste(y, collapse = "/") else ""
+  })
   x <- tolower(x)
-  x[!ok] <- ""
-  return(x)  
+  return(x)
 }
 
 get_doi <- function(x, minscore = 1.5, type = NULL) {

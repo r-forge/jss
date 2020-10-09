@@ -5,6 +5,7 @@
 \alias{make_crossref}
 \alias{make_ojs}
 \alias{make_ojs3}
+\alias{make_twitter}
 \alias{make_jss_bib}
 
 \title{Generate Files with Metainformation for JSS Publications}
@@ -21,6 +22,7 @@ make_readme(x = ".", \dots)
 make_crossref(x = ".", \dots, deposit = TRUE)
 make_ojs(x = ".", \dots)
 make_ojs3(x = ".", \dots)
+make_twitter(x = ".", density = 300, \dots)
 }
 
 \arguments{
@@ -28,6 +30,7 @@ make_ojs3(x = ".", \dots)
     specifying the \code{dir} to be passed to \code{jss}.}
   \item{\dots}{arguments passed to \code{\link[jss]{format.jss}}.}
   \item{deposit}{logical. Should the metainformation be deposited with Crossref?}
+  \item{density}{numeric. Resolution for rendering PDF to PNG.}
 }
 
 \details{

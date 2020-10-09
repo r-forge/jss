@@ -9,6 +9,7 @@ export(
   "make_crossref",
   "make_ojs",
   "make_ojs3",
+  "make_twitter",
 
   "make_jss_bst",
   "make_jss_cls",

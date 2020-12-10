@@ -1,6 +1,6 @@
-\def\fileversion{3.1}
+\def\fileversion{3.2}
 \def\filename{jss}
-\def\filedate{2020/08/03}
+\def\filedate{2020/12/09}
 %
 % \iffalse
 %
@@ -63,6 +63,9 @@
 %
 % \changes{3.1}{2020/08/03}
 %   {changed DOI resolver from dx.doi.org to doi.org, assure fontseries b in pkg, include lmodern if available}
+%
+% \changes{3.2}{2020/12/09}
+%   {inclusion of maketitle improved by using the new hooks if available}
 %
 %
 %
@@ -1377,13 +1380,14 @@
 %    \end{macrocode}
 %
 % We put the header at the beginning of the
-% document (for footer see above).
+% document, using either the classic macro or the new hook
+% macro. See also above for the footer.
 %    \begin{macrocode}
 %<*class>
 \if@notitle
   %% \AtBeginDocument{\maketitle}
 \else
-  \AtBeginDocument{\maketitle}
+  \@ifundefined{AddToHook}{\AtBeginDocument{\maketitle}}{\AddToHook{begindocument}[maketitle]{\maketitle}}
 \fi
 %</class>
 %    \end{macrocode}

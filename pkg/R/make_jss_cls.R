@@ -15,10 +15,23 @@ make_jss_cls <- function(dir = ".", pdf = FALSE)
   system("pdflatex jss.dtx", ignore.stdout = TRUE)
   system("pdflatex jss.ins", ignore.stdout = TRUE)
   if(pdf) system("pdflatex jss.dtx", ignore.stdout = TRUE)
+  fix_cls_license("jss.cls")
   
   ## copy output back
   if(pdf) file.copy("jss.pdf", dir)
   invisible(file.copy("jss.cls", dir))
+}
+
+fix_cls_license <- function(cls = "jss.cls") {
+  file <- cls
+  cls <- readLines(cls)
+  wi <- c(
+    grep("generated with the docstrip utility", cls, fixed = TRUE),
+    grep("fileversion", cls, fixed = TRUE)[1L] - 1L
+  )
+  cls <- cls[-(wi[1L]:wi[2L])]
+  writeLines(cls, file)
+  invisible(cls)
 }
 
 make_jss_bst <- function(dir = ".")

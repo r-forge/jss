@@ -72,7 +72,7 @@ tools::showNonASCII(readLines("ref.bib"))
 - Change bibliography name to ref.bib
 
 - In math formulas, use `\top` for transposing, `\dots` or `\ldots` for ...,
-  and instert spaces after commas (e.g. "0, 1" instead of "0,1").
+  and insert spaces after commas (e.g. "0, 1" instead of "0,1").
 
 - If possible, figures should be in the following format
 
@@ -88,7 +88,7 @@ tools::showNonASCII(readLines("ref.bib"))
 - Set figure options sensibly, e.g. `width=0.8\textwidth, trim=0 20 0 20,
   clip`.  Choose width in a way that text within figure is approximately same
 size as caption. If there are white margins and figure needs enlarging, use
-`trim` and `clip`. Do not set `height` to keep aspact ratio.
+`trim` and `clip`. Do not set `height` to keep aspect ratio.
 
 - Before and after code, formula (equation, align) or itemization (itemize,
   enumerate) environments should be no blank line in the tex-file. This would
@@ -98,8 +98,8 @@ lines with `%`.
 - `\proglang` (e.g. `\proglang{S}3`), `\pkg` and `\code` have to be used for
   code highlighting (including titles and references).
 
-- Code that could potetially be executed by the reader should be in
-  CodeInput/CodeOutput or equivalently int Sinput/Soutput environments.
+- Code that could potentially be executed by the reader should be in
+  CodeInput/CodeOutput or equivalently in Sinput/Soutput environments.
 
 - Code that should not be run (e.g. `plot(x, y, ...)`) should be in `\code{}`.
 

@@ -1,6 +1,6 @@
-\def\fileversion{3.2}
+\def\fileversion{3.3}
 \def\filename{jss}
-\def\filedate{2020/12/09}
+\def\filedate{2021/05/23}
 %
 % \iffalse
 %
@@ -66,6 +66,9 @@
 %
 % \changes{3.2}{2020/12/09}
 %   {inclusion of maketitle improved by using the new hooks if available}
+%
+% \changes{3.3}{2021/05/23}
+%   {use package xcolor instead of color}
 %
 %
 %
@@ -138,7 +141,7 @@
 % in more detail in the following.
 %
 % By using |jss.cls|, the packages \foopkg{graphicx},
-% \foopkg{color}, \foopkg{hyperref}, \foopkg{ae}, \foopkg{fancyverb} and
+% \foopkg{xcolor}, \foopkg{hyperref}, \foopkg{ae}, \foopkg{fancyverb} and
 % \foopkg{natbib} are loaded automatically. Additionally, \foopkg{lmodern}
 % and \foopkg{upquote} are loaded if available.
 % Authors may, of course, include further packages if necessary (e.g.,
@@ -742,7 +745,7 @@
 \documentclass[a4paper]{ltxdoc}
 \providecommand{\file}[1]{\texttt{#1}}
 \providecommand{\pkg}[1]{{\fontseries{m}\fontseries{b}\selectfont #1}}
-\usepackage{color,hyperref}
+\usepackage{xcolor,hyperref}
 \oddsidemargin1.2cm
 \textwidth14.2cm
 \textheight23.3cm
@@ -825,7 +828,7 @@
 %    \begin{macrocode}
 %<*class>
 %% required packages
-\RequirePackage{graphicx,color,ae,fancyvrb}
+\RequirePackage{graphicx,xcolor,ae,fancyvrb}
 \RequirePackage[T1]{fontenc}
 \IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
 \IfFileExists{lmodern.sty}{\RequirePackage{lmodern}}{}

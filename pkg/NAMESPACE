@@ -25,6 +25,7 @@ export(
   "code_lines",
   "add_doi",
   "get_doi",
+  "get_orcidlink",
   "shortcites"
 )
 

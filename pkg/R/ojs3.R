@@ -203,7 +203,7 @@ ojs3_genre <- function(description){
 
 ojs3_filetype <- function(file){
   # package mime needed:
-  return(guess_type(file, mime_extra = NULL, unknown =  "n/a"))
+  # return(guess_type(file, mime_extra = NULL, unknown =  "n/a"))
   # without mime: 
   # if(file_ext(file)=="py"){return("text/x-python")}
   # if(file_ext(file)=="c"){return("text/x-csrc")}

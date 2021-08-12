@@ -8,7 +8,10 @@ get_orcidlink <- function(person = NULL, rows = 1L, verbose = TRUE, ...) {
   rval <- lapply(person, function(p) {
     p <- cbind(p, as.matrix(rorcid::orcid(p, rows = rows, ...))[, 2L:1L, drop = FALSE])
     p[, 2L] <- paste0("\\orcidlink{", p[, 2L], "}")
-    if(verbose) writeLines(c(p[1L, 1L], paste0("~", p[1L, 2L]), p[, 3L], ""))
+    if(verbose) {
+      writeLines(c(p[1L, 1L], paste0("~", p[1L, 2L]), p[, 3L], ""))
+      utils::browseURL(p[1L, 3L])
+    }
     return(p)
   })
   rval <- do.call("rbind", rval)

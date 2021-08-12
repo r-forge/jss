@@ -20,7 +20,8 @@ get_orcidlink(person = NULL, rows = 1L, verbose = TRUE, ...)
     (optionally enhanced by ORCID search strings).}
   \item{rows}{integer. The number of search results for each author.}
   \item{verbose}{logical. Should results be printed to the screen
-    (and then returned invisibly)?}
+    and the ORCID URL opened in the browser? If set to \code{TRUE},
+    results are returned invisibly.}
   \item{...}{further arguments passed to \code{\link[rorcid]{orcid}}.}
 }
 
@@ -34,6 +35,11 @@ query \url{https://orcid.org/} for their possible ORCIDs.
 All search results should be checked carefully because the chance to
 obtain an erroneous ORCID result is quite high if an author does not
 have an ORCID.
+
+For authentication see \url{https://docs.ropensci.org/rorcid/}.
+An easy option is to run \code{\link[rorcid]{orcid_auth}} once
+and put the resulting UUID string into your \code{.Rprofile} as
+\code{options(orcid_token = "...")}.
 }
 
 \value{

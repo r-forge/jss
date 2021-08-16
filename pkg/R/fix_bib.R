@@ -45,14 +45,15 @@ shortcites <- function(x, maxlength = 6) {
   invisible(rval)
 }
 
-fix_bib <- function(x, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
+fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
 {
+  if(is.null(x)) x <- dir(pattern = "\\.bib$")[1L]
   file <- file
   if(is.character(x)) {
     if(bibtool) {
       tex <- gsub("\\.bib$", ".tex", x)
       if(!file.exists(tex)) tex <- Sys.glob("*.tex")[1L]
-      bibtool(tex = tex, orig = orig)
+      if(!is.na(tex)) bibtool(tex = tex, orig = orig)
     } else {
       file.copy(x, orig)
     }
@@ -234,14 +235,11 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
   ## query CrossRef through rcrossref
   i <- 0
   ok <- FALSE
-  while(i < 5 & !ok) {
+  while(i < 3 & !ok) {
     i <- i + 1
-    y <- try(rcrossref::cr_works(query = qry, limit = 1L)$data, silent = TRUE)
-    if(inherits(y, "try-error")) {
-      Sys.sleep(5)
-    } else {
-      ok <- TRUE
-    }
+    y <- try(rcrossref::cr_works(query = qry, limit = 1L)$data, silent = i < 3)
+    ok <- !inherits(y, "try-error")
+    if(!ok & i < 3) Sys.sleep(3)
   }
   if(!ok) return("")
 

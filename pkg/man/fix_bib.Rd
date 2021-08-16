@@ -13,7 +13,7 @@ especially for publications in the Journal of Statistical Software.
 }
 
 \usage{
-fix_bib(x, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
+fix_bib(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
 
 bibtool(tex = NULL, orig = "_orig.bib")
 
@@ -24,7 +24,8 @@ add_doi(x, file = "out.bib", minscore = 1.5)
 }
 
 \arguments{
-  \item{x}{character or bibentry object. If a character is supplied
+  \item{x}{character or bibentry object. If \code{NULL} the first BibTeX
+    file in the current working directory is used. If a character is supplied
     it is read into a bibentry object using \code{\link[bibtex]{read.bib}}.}
   \item{file}{character for output BibTeX file name.}
   \item{orig}{character with file name for copy of the original

@@ -64,7 +64,7 @@ fix_bst_license <- function(bst = "jss.bst") {
   )
   bst <- append(bst[-(wi[1L]:wi[2L])], after = wi[1L] - 1L, values = c(
     "%%",
-    "%% ** BibTeX style file for JSS publications (http://www.jstatsoft.org/)",
+    "%% ** BibTeX style file for JSS publications (https://www.jstatsoft.org/)",
     "%%",
     "%% License: GPL-2 | GPL-3",
     " % ===============================================================",

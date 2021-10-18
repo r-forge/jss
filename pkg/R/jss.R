@@ -184,7 +184,7 @@ jss <- function(dir = ".")
   num2 <- gsub(" ", "0", format(c(as.numeric(num2), 10)))[-2L]
   year <- extract_cmd(x, "\\Year")
   month <- extract_cmd(x, "\\Month")
-  url <- paste0("http://www.jstatsoft.org/v", vol2, "/", stype, num2, "/")
+  url <- paste0("https://www.jstatsoft.org/v", vol2, "/", stype, num2, "/")
   doi <- paste0("10.18637/jss.v", vol3, ".", stype, num2)
   DOI <- extract_cmd(x, "DOI")
   if(!(DOI %in% c("", doi))) warning(sprintf("DOI needs to be fixed: \\DOI{%s}", doi))
@@ -308,7 +308,7 @@ format_jss_to_citation <- function(x, package = NULL)
   )
 }
 
-format_jss_to_readme <- function(x)
+format_jss_to_readme <- function(x, paper = FALSE)
 {
   if(!inherits(x, "jss")) x <- jss(x)
 
@@ -320,7 +320,7 @@ format_jss_to_readme <- function(x)
 
   if(length(fil) > 0L) {
     vfil <- substr(fil, 1L, 1L) == "v"
-    descr <- ifelse(x$rpackage & file_ext(fil) == "gz", "R source package",
+    descr <- ifelse(x$rpackage & file_ext(fil) == "gz", sprintf("R package (%s)", x$package),
       ifelse(vfil & file_ext(fil) == "R", "R replication code",    
       ifelse(vfil & file_ext(fil) == "m", "MATLAB replication code",
       ifelse(vfil & file_ext(fil) == "py", "Python replication code",
@@ -337,8 +337,15 @@ format_jss_to_readme <- function(x)
       ifelse(file_ext(fil) == "RData", "Supplementary data (R binary format)",
       ifelse(file_ext(fil) %in% c("gz", "zip", "tar") & !vfil, "Source code",
       "Replication materials"))))))))))))))))
+  } else {
+    descr <- NULL
   }
-    
+
+  if(paper) {
+    fil <- c(paste0(x$key["number"], ".pdf"), fil)
+    descr <- c("Paper", descr)
+  }
+
   rval <- c(
     "Source code and replication materials for",
     paste("  ", paste0(format(x$person, include = c('given', 'family')), collapse = ', '), sep = ""),

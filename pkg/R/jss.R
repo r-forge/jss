@@ -316,7 +316,7 @@ format_jss_to_readme <- function(x, paper = FALSE)
   fil <- fil[!(fil %in% c(
     paste0(x$key["number"], c(".tex", ".bib", ".pdf")),
     gsub("v0", "v", paste0(x$key["number"], c(".tex", ".bib", ".pdf")), fixed = TRUE),
-    "README.txt", "readme.txt", "_orig.bib", "_orig.R", "paper.pdf"))]
+    "README.txt", "readme.txt", "_orig.bib", "_orig.R", "paper.pdf", "OJS.xml", "OJS.txt", "CROSSREF.xml"))]
 
   if(length(fil) > 0L) {
     vfil <- substr(fil, 1L, 1L) == "v"

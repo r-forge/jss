@@ -4,6 +4,7 @@
 \alias{make_readme}
 \alias{make_crossref}
 \alias{make_ojs}
+\alias{make_ojs2}
 \alias{make_ojs3}
 \alias{make_twitter}
 \alias{make_jss_bib}
@@ -21,6 +22,7 @@ make_citation(x = ".", \dots)
 make_readme(x = ".", \dots)
 make_crossref(x = ".", \dots, deposit = TRUE)
 make_ojs(x = ".", \dots)
+make_ojs2(x = ".", \dots)
 make_ojs3(x = ".", \dots)
 make_twitter(x = ".", density = 300, \dots)
 }
@@ -45,8 +47,8 @@ the manuscript LaTeX files.
 with CrossRef. If \code{$HOME/.crossref} exists and contains two lines (with login id
 and password, respectively), the XML is deposited automatically via \code{curl}.
 
-\code{make_ojs} and \code{make_ojs3} generate \code{OJS.xml} files for importing a new submission
-into OJS (version2) and OJS3, respectively.
+\code{make_ojs2} and \code{make_ojs3} generate \code{OJS.xml} files for importing a new submission
+into OJS version 2 and 3, respectively. \code{make_ojs} creates an agnostic \code{OJS.txt} file.
 }
 
 \seealso{

@@ -22,8 +22,9 @@ format_jss_to_ojs <- function(x)
     sprintf('Abstract:\n%s\n', ojs_abstract(file.path(x$directory, x$pdf), x$type)),
     sprintf('Keywords:\n%s\n', x$keywords),
 
-    sprintf('Pages: %s', x$pages),
     sprintf('DOI: %s', x$doi),
+    sprintf('Pages: 1 - %s', x$pages),
+    sprintf('URL path: %s', x$key["number"]),
     sprintf('Date submitted: %s', x$submitdate),
     sprintf('Date accepted:  %s', x$acceptdate),
     sprintf('Date published: %s', Sys.Date()),

@@ -17,24 +17,40 @@ format_jss_to_ojs <- function(x)
     supp <- if(nsupp > 0L) supp[6L:(5L + nsupp)] else NULL
   }
 
-  c(sprintf('Title:\n%s\n', x$plaintitle),
-    sprintf('Author(s):\n%s\n', paste(format(x$person), collapse = "\n")),
+  c(sprintf('Title & Abstract\n================\nTitle:\n%s\n', x$plaintitle),
     sprintf('Abstract:\n%s\n', ojs_abstract(file.path(x$directory, x$pdf), x$type)),
     sprintf('Keywords:\n%s\n', x$keywords),
+    
+    sprintf('Contributors\n============\n%s\n', paste(sapply(format(x$person), latex_to_utf8), collapse = "\n")),
 
-    sprintf('DOI: %s', x$doi),
+    sprintf('Identifiers\n===========\nDOI: %s', x$doi),
+
+    '\nGalleys\n=======',
+    supp,
+    "",
+
+    sprintf('Permissions & Disclosure\n========================\n%s\n', paste(sapply(format(x$person, include = c("given", "family")), latex_to_utf8), collapse = ", ")),
+
+    sprintf('Issue\n=====\nVolume: %s', x$volume),
+    sprintf('Section: %s', factor(x$type,
+      levels = c("article", "codesnippet", "bookreview", "softwarereview"),
+      labels = c("Articles", "Code Snippets", "Book Reviews", "Software Reviews"))),
     sprintf('Pages: 1 - %s', x$pages),
-    sprintf('URL path: %s', x$key["number"]),
-    sprintf('Date submitted: %s', x$submitdate),
-    sprintf('Date accepted:  %s', x$acceptdate),
-    sprintf('Date published: %s', Sys.Date()),
-    sprintf('Copyright: %s', paste(format(x$person, include = c("given", "family")), collapse = ", ")),
-
-    '\nFiles:',
-    supp
+    sprintf('URL path: %s', x$key["number"])
+    #sprintf('Date submitted: %s', x$submitdate),
+    #sprintf('Date accepted:  %s', x$acceptdate),
+    #sprintf('Date published: %s', Sys.Date()),
   )
 }
 
+latex_to_utf8 <- function(x) {
+  ix <- grepl("\\", x, fixed = TRUE)
+  if(!any(ix)) return(x)
+  x <- tools::deparseLatex(tools::latexToUtf8(tools::parseLatex(x)))
+  x <- gsub("{", "", x, fixed = TRUE)
+  x <- gsub("}", "", x, fixed = TRUE)
+  return(x)
+}
 
 ojs_abstract <- function(file, type) {
   if(type %in% c("bookreview", "softwarereview")) return('-')

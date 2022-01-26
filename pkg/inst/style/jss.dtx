@@ -1,11 +1,11 @@
 \def\fileversion{3.3}
 \def\filename{jss}
-\def\filedate{2021/05/23}
+\def\filedate{2021/12/10}
 %
 % \iffalse
 %
 %%
-%% Package `jss' to use with LaTeX2e for JSS publications (http://www.jstatsoft.org/)
+%% Package `jss' to use with LaTeX2e for JSS publications (https://www.jstatsoft.org/)
 %% License: GPL-2 | GPL-3
 %% Copyright: (C) Achim Zeileis
 %% Please report errors to Achim.Zeileis@R-project.org
@@ -67,8 +67,11 @@
 % \changes{3.2}{2020/12/09}
 %   {inclusion of maketitle improved by using the new hooks if available}
 %
-% \changes{3.3}{2021/05/23}
-%   {use package xcolor instead of color}
+% \changes{3.3}{2021/12/10}
+%   {use package xcolor instead of color and make sure the colors Red/Blue are redefined at beginning of the document}
+%
+% \changes{3.4}{2022/01/26}
+%   {package ae is not needed anymore}
 %
 %
 %
@@ -85,7 +88,7 @@
 %
 % The \LaTeXe{} document class \foopkg{jss} is an extension of the
 % standard \LaTeXe{} \foopkg{article} class for publications in the
-% Journal of Statistical Software (JSS, \url{http://www.jstatsoft.org/}).
+% Journal of Statistical Software (JSS, \url{https://www.jstatsoft.org/}).
 % Additionally, the JSS-specific header/footer can be easily switched
 % off so that the document class can easily be used for other publications,
 % e.g., \textsf{R} package vignettes.
@@ -104,7 +107,7 @@
 % (|.tex|, |.bib|, and all graphics). A quick check for the most important aspects
 % of the JSS style is given in Section~\ref{sec:check}; authors should make sure that all
 % of them are addressed in the final version. A list of frequently asked questions
-% (FAQ) is available online \url{http://www.jstatsoft.org/style} that provides
+% (FAQ) is available online \url{https://www.jstatsoft.org/style} that provides
 % additional details and tries to address typical problems.
 %
 % All documents need to be processed by pdf\LaTeX{}, some useful information
@@ -141,7 +144,7 @@
 % in more detail in the following.
 %
 % By using |jss.cls|, the packages \foopkg{graphicx},
-% \foopkg{xcolor}, \foopkg{hyperref}, \foopkg{ae}, \foopkg{fancyverb} and
+% \foopkg{xcolor}, \foopkg{hyperref}, \foopkg{fancyverb} and
 % \foopkg{natbib} are loaded automatically. Additionally, \foopkg{lmodern}
 % and \foopkg{upquote} are loaded if available.
 % Authors may, of course, include further packages if necessary (e.g.,
@@ -218,7 +221,10 @@
 % \end{verbatim}
 % If not all authors fit into a single line, |\AND| (instead of
 % |\And|) should be used in front of authors that should go into
-% the next line.
+% the next line. If authors have an ORCID it is recommended to include
+% |\usepackage{orcidlink}| in the header and extend the author names in
+% the |\author| command in the following format:
+% |Achim Zeileis~\orcidlink{0000-0003-0918-3766}|.
 % 
 % \DescribeMacro{\Plainauthor}
 % The list of authors without affiliations. It needs to be
@@ -316,19 +322,18 @@
 % \begin{verbatim}
 % \Address{
 %   Achim Zeileis\\
+%   Universit\"at Innsbruck\\
 %   Department of Statistics and Mathematics\\
 %   Faculty of Economics and Statistics\\
-%   Universit\"at Innsbruck\\
 %   6020 Innsbruck, Austria\\
 %   E-mail: \email{Achim.Zeileis@uibk.ac.at}\\
-%   URL: \url{http://eeecon.uibk.ac.at/~zeileis/}
+%   URL: \url{https://www.zeileis.org/}
 % }
 % \end{verbatim}
-% It is also possible to include your telephone and fax 
-% number, by adding them in the format
+% It is also possible to include your telephone
+% number, by adding it in the format
 % \begin{verbatim}
 %   Telephone: +43/512/507-7103
-%   Fax: +43/512/507-2851
 % \end{verbatim}
 % before the e-mail address.
 %
@@ -477,19 +482,18 @@
 % \begin{verbatim}
 % \Address{
 %   Achim Zeileis\\
+%   Universit\"at Innsbruck\\
 %   Department of Statistics and Mathematics\\
 %   Faculty of Economics and Statistics\\
-%   Universit\"at Innsbruck\\
 %   6020 Innsbruck, Austria\\
 %   E-mail: \email{Achim.Zeileis@uibk.ac.at}\\
-%   URL: \url{http://eeecon.uibk.ac.at/~zeileis/}
+%   URL: \url{https://www.zeileis.org/}
 % }
 % \end{verbatim}
-% It is also possible to include your telephone and fax 
-% number, by adding them in the format
+% It is also possible to include your telephone
+% number, by adding it in the format
 % \begin{verbatim}
 %   Telephone: +43/512/507-7103
-%   Fax: +43/512/507-2851
 % \end{verbatim}
 % before the e-mail address.
 %
@@ -828,7 +832,7 @@
 %    \begin{macrocode}
 %<*class>
 %% required packages
-\RequirePackage{graphicx,xcolor,ae,fancyvrb}
+\RequirePackage{graphicx,xcolor,fancyvrb}
 \RequirePackage[T1]{fontenc}
 \IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
 \IfFileExists{lmodern.sty}{\RequirePackage{lmodern}}{}
@@ -958,7 +962,7 @@
   Affiliation\\
   Address, Country\\
   E-mail: \email{name@address}\\
-  URL: \url{http://link/to/webpage/}
+  URL: \url{https://link/to/webpage/}
 }
 
 \Reviewer{Firstname Lastname\\Affiliation}
@@ -971,7 +975,7 @@
 \ISBN{x-xxxxx-xxx-x}
 \Pages{xv + 123}
 \Price{USD 69.95 (P)}
-\URL{http://link/to/webpage/}
+\URL{https://link/to/webpage/}
 \DOI{10.18637/jss.v000.i00}
 %</class>
 %    \end{macrocode}
@@ -1090,10 +1094,10 @@
     \vspace{.1\baselineskip}
     {\fontfamily{pzc} \fontsize{13}{15} \selectfont Journal of Statistical Software}
     \hfill
-    \url{http://www.jstatsoft.org/}\\ \nopagebreak
+    \url{https://www.jstatsoft.org/}\\ \nopagebreak
     published by the Foundation for Open Access Statistics
     \hfill
-    \url{http://www.foastat.org/}\\[.3\baselineskip] \nopagebreak
+    \url{https://www.foastat.org/}\\[.3\baselineskip] \nopagebreak
     {\@Month{} \@Year, Volume~\@Volume, \@Seriesname~\@Issue}
     \hfill
     \@Firstdate\\ \nopagebreak
@@ -1318,8 +1322,10 @@
 %    \begin{macrocode}
 %<*class>
 %% colors
+\AtBeginDocument{%
 \definecolor{Red}{rgb}{0.5,0,0}
 \definecolor{Blue}{rgb}{0,0,0.5}
+}
 %</class>
 %    \end{macrocode}
 % and is then defined by

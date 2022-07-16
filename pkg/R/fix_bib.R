@@ -201,7 +201,7 @@ fix_bib_doi <- function(x) {
   x <- strsplit(x, "/|//")
   x <- sapply(x, function(y) {
     ok <- length(y) >= 2L
-    if(ok && substr(y, 1L, 4L) == "http") {
+    if(ok && substr(y[1L], 1L, 4L) == "http") {
       y <- y[-1L]
       if(length(y) < 2L) ok <- FALSE
     }

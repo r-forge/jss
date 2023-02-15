@@ -137,6 +137,7 @@ jss <- function(dir = ".")
       z <- z[z != ""]
       au <- clps(z[1L])
       z <- unlist(strsplit(z[-1L], ", ", fixed = TRUE))
+      z <- gsub("\\phantom{", "", z, fixed = TRUE)
       z <- sapply(z[grep("\\email", z, fixed = TRUE)], extract_arg)
       z <- as.list(as.character(z))
       if(length(z) < length(au)) {

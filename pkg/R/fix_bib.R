@@ -45,7 +45,7 @@ shortcites <- function(x, maxlength = 6) {
   invisible(rval)
 }
 
-fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
+fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE, escape = TRUE)
 {
   if(is.null(x)) x <- dir(pattern = "\\.bib$")[1L]
   file <- file
@@ -87,7 +87,12 @@ fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi 
   if(shortcites) shortcites(x)
   
   if(is.character(file)) {
-    bibtex::write.bib(x, file = file)
+    xbib <- toBibtex(x) ## FIXME: will get escape=FALSE argument in R-devel
+    if(!isFALSE(escape)) {
+      if(isTRUE(escape)) escape <- "UTF-8"
+      xbib[xbib != ""] <- tools::encoded_text_to_latex(xbib[xbib != ""], escape)
+    }
+    writeLines(xbib, file)
     invisible(x)
   } else {
     return(x)

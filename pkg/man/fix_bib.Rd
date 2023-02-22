@@ -13,7 +13,7 @@ especially for publications in the Journal of Statistical Software.
 }
 
 \usage{
-fix_bib(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE)
+fix_bib(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE, escape = TRUE)
 
 bibtool(tex = NULL, orig = "_orig.bib")
 
@@ -36,6 +36,11 @@ add_doi(x, file = "out.bib", minscore = 1.5)
     on \code{\link[rcrossref]{cr_works}})?}
   \item{shortcites}{logical. Should bibentries with a long author list
     be reported in a shortcites statement?}
+  \item{escape}{logical or character. Should encoded text (non-ASCII, e.g., for
+    accent and umlaut characters) be preserved in BibTeX output (\code{FALSE})
+    or escaped by their LaTeX representations (\code{TRUE}, default)? Instead
+    of \code{TRUE} it is also possible to indicate the encoding of the text
+    (e.g., \code{escape = "UTF-8"}) explicitly.}
   \item{tex}{character specifying the input LaTeX file.}
   \item{maxlength}{numeric. Maximum number of authors for a
     normal cite (that does not have to be shortened).}

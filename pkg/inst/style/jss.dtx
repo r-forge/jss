@@ -70,8 +70,8 @@
 % \changes{3.3}{2021/12/10}
 %   {use package xcolor instead of color and make sure the colors Red/Blue are redefined at beginning of the document}
 %
-% \changes{3.4}{2022/01/26}
-%   {package ae is not needed anymore}
+% \changes{3.4}{2023/03/05}
+%   {package ae is not needed anymore, drop ineffective hyperindex option}
 %
 %
 %
@@ -1333,7 +1333,6 @@
 %<*class>
 \if@review
   \hypersetup{%
-    hyperindex = {true},
     colorlinks = {true},
     linktocpage = {true},
     plainpages = {false},
@@ -1346,7 +1345,6 @@
   }
 \else
   \hypersetup{%
-    hyperindex = {true},
     colorlinks = {true},
     linktocpage = {true},
     plainpages = {false},

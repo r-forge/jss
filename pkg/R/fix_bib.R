@@ -73,6 +73,7 @@ fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi 
     if(!is.null(x[i]$doi))       x[i]$doi       <- fix_bib_doi(x[i]$doi) else {
       if(doi & tolower(x[i]$bibtype) == "article") x[i]$doi <- get_doi(x[i]) ## could add type = "journal-article"
       if(doi & tolower(x[i]$bibtype) == "book") x[i]$doi <- get_doi(x[i], type = "book")
+      if(doi & !is.null(x[i]$url) & tolower(x[i]$bibtype) %in% c("manual", "misc")) x[i]$doi <- fix_bib_doi(x[i]$url)
     }
     if(!is.null(x[i]$doi)) {
       if(x[i]$doi == "") x[i]$doi <- NULL
@@ -203,26 +204,48 @@ fix_bib_journal <- function(x) {
 }
 
 fix_bib_doi <- function(x) {
-  x <- strsplit(x, "/|//")
-  x <- sapply(x, function(y) {
-    ok <- length(y) >= 2L
-    if(ok && substr(y[1L], 1L, 4L) == "http") {
-      y <- y[-1L]
-      if(length(y) < 2L) ok <- FALSE
+  ## figure out DOIs from URLs:
+  ## either from CRAN or from doi.org URLs
+  if(grepl("cran.r-project.org", tolower(x), fixed = TRUE)) {
+
+    if(grepl("package=", x, fixed = TRUE)) {
+      x <- strsplit(x, "package=", fixed = TRUE)[[1L]][[2L]]
+    } else if(grepl("web/packages/", x, fixed = TRUE)) {
+      x <- strsplit(x, "web/packages/", fixed = TRUE)[[1L]][[2L]]
+      x <- strsplit(x, "/", fixed = TRUE)[[1L]][[1L]]
+    } else {
+      x <- ""
     }
-    if(ok && grepl("doi.org", y[1L], fixed = TRUE)) {
-      y <- y[-1L]
-      if(length(y) < 2L) ok <- FALSE    
-    }
-    if(ok && substr(y[1L], 1L, 3L) != "10.") {
-      ok <- FALSE
-    }
-    if(ok && any(nchar(y) < 1L)) {
-      ok <- FALSE
-    }
-    if(ok) paste(y, collapse = "/") else ""
-  })
-  x <- tolower(x)
+    
+    if(x != "") x <- paste0("10.32614/CRAN.package.", x)
+  
+  } else {
+  
+    x <- strsplit(x, "/|//")
+    x <- sapply(x, function(y) {
+      ok <- length(y) >= 2L
+      if(ok && substr(y[1L], 1L, 4L) == "http") {
+        y <- y[-1L]
+        if(length(y) < 2L) ok <- FALSE
+      }
+      if(ok && grepl("doi.org", y[1L], fixed = TRUE)) {
+        y <- y[-1L]
+        if(length(y) < 2L) ok <- FALSE    
+      }
+      if(ok && substr(y[1L], 1L, 3L) != "10.") {
+        ok <- FALSE
+      }
+      if(ok && any(nchar(y) < 1L)) {
+        ok <- FALSE
+      }
+      if(ok) paste(y, collapse = "/") else ""
+    })
+    x <- tolower(x)
+
+  }
+  
+  if(grepl("/cran.", x, fixed = TRUE)) x <- gsub("/cran.", "/CRAN.", x, fixed = TRUE)
+  
   return(x)
 }
 
@@ -252,7 +275,11 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
   y <- as.data.frame(y)
   ok <- y$score > minscore
   if(!is.null(type)) ok <- ok & (type == y$type)
-  if(ok) return(y$doi) else return("")
+  y <- if(ok) y$doi else ""
+  
+  ## canonicalize CRAN DOIs
+  if(grepl("/cran.", y, fixed = TRUE)) y <- gsub("/cran.", "/CRAN.", y, fixed = TRUE)
+  return(y)
 }
 
 add_doi <- function(x, file = "out.bib", minscore = 1.5) {

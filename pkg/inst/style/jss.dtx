@@ -1,6 +1,6 @@
-\def\fileversion{3.4}
+\def\fileversion{3.5}
 \def\filename{jss}
-\def\filedate{2023/03/05}
+\def\filedate{2023/08/07}
 %
 % \iffalse
 %
@@ -72,6 +72,9 @@
 %
 % \changes{3.4}{2023/03/05}
 %   {package ae is not needed anymore, drop ineffective hyperindex option}
+%
+% \changes{3.5}{2023/08/07}
+%   {replace centerline in headings to align page number and avoid overfull hbox}
 %
 %
 %
@@ -1138,6 +1141,7 @@
 %    \begin{macrocode}
 %<*class>
 %% new \maketitle
+\newcommand{\centerheader}[1]{\null\hfill#1\hfill\null}
 \def\@myoddhead{
   {\color{white} JSS}\\[-1.42cm]
   \hspace{-2em} \includegraphics[height=23mm,keepaspectratio]{jsslogo} \hfill
@@ -1178,9 +1182,9 @@
 
     \thispagestyle{empty}
     \if@nojss
-      \markboth{\centerline{\@Shorttitle}}{\centerline{\@Hyperauthor}}
+      \markboth{\centerheader{\@Shorttitle}}{\centerheader{\@Hyperauthor}}
     \else
-      \markboth{\centerline{\@Shorttitle}}{\centerline{\@Hypersubject}}
+      \markboth{\centerheader{\@Shorttitle}}{\centerheader{\@Hypersubject}}
     \fi
     \pagestyle{myheadings}
   }
@@ -1201,13 +1205,13 @@
    \setcounter{footnote}{0}
 
    \if@noheadings
-    %% \markboth{\centerline{\@Shorttitle}}{\centerline{\@Hypersubject}}
+    %% \markboth{\centerheader{\@Shorttitle}}{\centerheader{\@Hypersubject}}
     \else
      \thispagestyle{empty}
       \if@nojss
-        \markboth{\centerline{\@Shorttitle}}{\centerline{\@Hyperauthor}}
+        \markboth{\centerheader{\@Shorttitle}}{\centerheader{\@Hyperauthor}}
       \else
-        \markboth{\centerline{\@Shorttitle}}{\centerline{\@Hypersubject}}
+        \markboth{\centerheader{\@Shorttitle}}{\centerheader{\@Hypersubject}}
       \fi
      \pagestyle{myheadings}
    \fi

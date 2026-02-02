@@ -14,7 +14,8 @@ especially for publications in the Journal of Statistical Software.
 }
 
 \usage{
-fix_bib(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi = TRUE, shortcites = TRUE, escape = TRUE)
+fix_bib(x = NULL, file = x, orig = "_orig.bib",
+  bibtool = TRUE, doi = TRUE, shortcites = TRUE, escape = TRUE)
 
 bibtool(tex = NULL, orig = "_orig.bib")
 
@@ -103,6 +104,9 @@ toBibtex(bde2)
 ## - unifies the TAS journal name,
 ## - and the DOI could be added by setting doi = TRUE or manually queried via
 ## get_doi(bde2)
+
+## cleanup
+file.remove("_orig.bib")
 }
 }
 

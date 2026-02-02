@@ -36,7 +36,7 @@ All search results should be checked carefully because the chance to
 obtain an erroneous ORCID result is quite high if an author does not
 have an ORCID.
 
-For authentication see \url{https://docs.ropensci.org/rorcid/}.
+For authentication see the \pkg{rorcid} package.
 An easy option is to run \code{\link[rorcid]{orcid_auth}} once
 and put the resulting UUID string into your \code{.Rprofile} as
 \code{options(orcid_token = "...")}.

@@ -49,7 +49,7 @@ function(x)
     pattern <- "[[:space:]]?(,|,?[[:space:]]and)[[:space:]]+"
     x <- do.call("c",
                  regmatches(x, gregexpr(pattern, y), invert = TRUE))
-    x <- x[!sapply(x, utils:::.is_not_nonempty_text)] ## for JSS testing with utils:::
+    x <- x[!sapply(x, .is_not_nonempty_text)]
 
     ## <JSS>
     ## don't expect Jr. to be a person
@@ -141,7 +141,7 @@ toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower
             else paste0(toupper(x1), tolower(substring(x, 2L)))
         }
 	
-        xx <- .Call(tools:::C_splitString, x, ' -/"()') ## for JSS testing with tools:::	
+        xx <- .Call("splitStringJSS", x, ' -/"()') ## for JSS testing with tools:::	
 	## RSplitString <- function(s) {
         ##   chars <- unlist(strsplit(s, NULL))
         ##   ind <- chars %in% unlist(strsplit(" -/\"()", NULL))
@@ -171,3 +171,6 @@ toTitleCase <- function(text, alone = NULL, lower = NULL, either = NULL, tolower
         stop("'text' must be a character vector")
     sapply(text, titleCase1, USE.NAMES = FALSE)
 }
+
+## copy from utils:::.is_not_nonempty_text
+.is_not_nonempty_text <- function(x) is.null(x) || anyNA(x) || all(grepl("^[[:space:]]*$", x))

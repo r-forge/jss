@@ -1,3 +1,5 @@
+useDynLib("jss", .registration = TRUE)
+
 import("tools", "utils")
 
 export(

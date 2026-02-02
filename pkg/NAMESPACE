@@ -23,6 +23,7 @@ export(
 
   "as.bibentry",
   "bibtool",
+  "read_bib",
   "code_lines",
   "add_doi",
   "get_doi",

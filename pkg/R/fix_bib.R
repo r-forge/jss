@@ -1,3 +1,17 @@
+read_bib <- function(file, ...) {
+  stopifnot(file.exists(file))
+  x <- try(bibtex::read.bib(file, ...), silent = TRUE)
+  if (inherits(x, "try-error") || length(x) < 1L) {
+    y <- readLines(file)
+    y <- gsub("(^[[:space:]]*)(})([[:space:]]*$)", "}", y)
+    tdir <- tempfile()
+    dir.create(tdir)
+    writeLines(y, file.path(tdir, file))
+    x <- bibtex::read.bib(file.path(tdir, file), ...)
+  }
+  return(x)
+}
+
 bibtool <- function(tex = NULL, orig = "_orig.bib")
 {
   ## use supplied/available .tex file and call pdflatex
@@ -24,7 +38,7 @@ bibtool <- function(tex = NULL, orig = "_orig.bib")
   bibfile <- paste(substr(bibfile, 10L, nchar(bibfile) - 1L), "bib", sep = ".")
   stopifnot(file.exists(bibfile))
 
-  bib <- bibtex::read.bib(bibfile)
+  bib <- read_bib(bibfile)
   file.rename(bibfile, orig)
   
   bib <- bib[tolower(bib$key) %in% tolower(cit)]
@@ -38,7 +52,7 @@ bibtool <- function(tex = NULL, orig = "_orig.bib")
 }
 
 shortcites <- function(x, maxlength = 6) {
-  if(is.character(x)) x <- bibtex::read.bib(x)
+  if(is.character(x)) x <- read_bib(x)
   rval <- x$key[sapply(x$author, length) > maxlength]
   if(length(rval) < 1L) return(character(0))
   writeLines(sprintf("\\shortcites{%s}", paste(rval, collapse = ",")))
@@ -57,7 +71,7 @@ fix_bib <- function(x = NULL, file = x, orig = "_orig.bib", bibtool = TRUE, doi 
     } else {
       file.copy(x, orig)
     }
-    x <- bibtex::read.bib(x)
+    x <- read_bib(x)
   }
   stopifnot(inherits(x, "bibentry"))
   stopifnot(length(x) >= 1L)
@@ -283,7 +297,7 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
 }
 
 add_doi <- function(x, file = "out.bib", minscore = 1.5) {
-    y <- if(inherits(x, "bibentry")) x else bibtex::read.bib(x)
+    y <- if(inherits(x, "bibentry")) x else read_bib(x)
     dois <- sapply(y, get_doi, minscore = minscore)
     for(i in 1:length(dois)) 
         if(nchar(dois[i]) > 0) y[i]$doi <- dois[i]

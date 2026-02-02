@@ -4,6 +4,7 @@
 \alias{shortcites}
 \alias{get_doi}
 \alias{add_doi}
+\alias{read_bib}
 
 \title{Fix BibTeX Files According to JSS Style Guidelines}
 
@@ -21,6 +22,8 @@ shortcites(x, maxlength = 6)
 
 get_doi(x, minscore = 1.5, type = NULL)
 add_doi(x, file = "out.bib", minscore = 1.5)
+
+read_bib(file, \dots)
 }
 
 \arguments{
@@ -48,6 +51,7 @@ add_doi(x, file = "out.bib", minscore = 1.5)
     when querying a DOI.}
   \item{type}{character. The reference type (e.g., \code{"journal-article"}
     or \code{"book"}) that needs to be matched.}
+  \item{\dots}{further arguments passed to \code{\link[bibtex]{read.bib}}.}
 }
 
 \details{

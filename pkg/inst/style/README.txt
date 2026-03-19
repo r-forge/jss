@@ -38,7 +38,7 @@ are addressed in the final version:
       - all titles in the BibTeX file in title style.
   - Figures, tables and equations are marked with a \label and
     referred to by \ref, e.g., "Figure~\ref{...}".
-  - Software packes are \cite{}d properly.
+  - Software packages are \cite{}d properly.
 For more details, see the style FAQ at http://www.jstatsoft.org/style
 and the manual jss.pdf, in particular the style checklist in
 Section 2.1.

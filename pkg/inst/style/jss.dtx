@@ -1,6 +1,6 @@
-\def\fileversion{3.5}
+\def\fileversion{3.6}
 \def\filename{jss}
-\def\filedate{2023/08/07}
+\def\filedate{2026/04/28}
 %
 % \iffalse
 %
@@ -75,6 +75,9 @@
 %
 % \changes{3.5}{2023/08/07}
 %   {replace centerline in headings to align page number and avoid overfull hbox}
+%
+% \changes{3.6}{2026/04/28}
+%   {improve maketitle hooks avoiding conflicts with recent hyperref versions}
 %
 %
 %
@@ -1398,7 +1401,7 @@
 \if@notitle
   %% \AtBeginDocument{\maketitle}
 \else
-  \@ifundefined{AddToHook}{\AtBeginDocument{\maketitle}}{\AddToHook{begindocument}[maketitle]{\maketitle}}
+  \@ifundefined{AddToHook}{\AtBeginDocument{\maketitle}}{\AddToHook{begindocument/end}[maketitle]{\maketitle}}
 \fi
 %</class>
 %    \end{macrocode}

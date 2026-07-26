@@ -279,8 +279,8 @@ get_doi <- function(x, minscore = 1.5, type = NULL) {
   ok <- FALSE
   while(i < 3 & !ok) {
     i <- i + 1
-    y <- try(rcrossref::cr_works(query = qry, limit = 1L)$data, silent = i < 3)
-    ok <- !inherits(y, "try-error")
+    y <- try(rcrossref::cr_works(query = qry, limit = 1L)$data, silent = i < 3, silent = TRUE)
+    ok <- !(is.null(y) || inherits(y, "try-error"))
     if(!ok & i < 3) Sys.sleep(3)
   }
   if(!ok) return("")
